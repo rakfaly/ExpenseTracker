@@ -36,7 +36,7 @@ struct TransactionsChart: View {
                 }
             }
             .chartForegroundStyleScale(range: stackColors)
-            .frame(height: 160)
+//            .frame(height: 160)
             .padding(.horizontal)
         }
     }

@@ -50,7 +50,7 @@ struct OverviewView: View {
                 //MARK: - Chart View
                 
                 if !isAddView {
-                    TransactionsChart(transactions: _transactions)
+                    TransactionsChart()
                         .padding(.vertical)
                 }
                 
@@ -74,9 +74,10 @@ extension OverviewView {
             if let sortedRequest = request.sortDescriptors {
                 transactions.nsSortDescriptors = sortedRequest
             }
-            
         }
     }
+    
+    
 }
 
 struct OverviewView_Previews: PreviewProvider {
