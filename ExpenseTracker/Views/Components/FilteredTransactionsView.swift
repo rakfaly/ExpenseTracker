@@ -12,7 +12,7 @@ struct FilteredTransactionsView: View {
     //MARK: - Properties
     @AppStorage("session") private var session: String?
     @Environment(\.managedObjectContext) var moc
-    @FetchRequest(sortDescriptors: []) var transactions: FetchedResults<Transaction>
+    @Binding var transactions: [Transaction]
     
     @State private var title = "Income"
     @State private var date = Date.now
@@ -54,6 +54,9 @@ struct FilteredTransactionsView: View {
             }
         } //: List
         .scrollContentBackground(.hidden)
+//        .task {
+//            await fetchData()
+//        }
     } //: body
 }
 
@@ -75,16 +78,21 @@ extension FilteredTransactionsView {
             print("Failed to delete data")
         }
     }
-//
+
 //    func fetchData() async {
 //        if let session = session {
 //            transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@", session)
+//            let request: NSFetchRequest<Transaction> = Transaction.fetchRequest()
+//            request.sortDescriptors = [NSSortDescriptor(keyPath: \Transaction.date, ascending: true)]
+//            if let sortedRequest = request.sortDescriptors {
+//                transactions.nsSortDescriptors = sortedRequest
+//            }
 //        }
 //    }
 }
 
 struct FilteredTransactionsView_Previews: PreviewProvider {
     static var previews: some View {
-        FilteredTransactionsView()
+        FilteredTransactionsView(transactions: .constant([Transaction]()))
     }
 }

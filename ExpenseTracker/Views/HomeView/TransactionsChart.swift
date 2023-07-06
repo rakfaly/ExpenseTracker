@@ -6,14 +6,13 @@
 //
 
 import Charts
+import CoreData
 import SwiftUI
 
 struct TransactionsChart: View {
     //MARK: - Properties
     @AppStorage("session") private var session: String?
-    @FetchRequest(sortDescriptors: [
-        SortDescriptor(\.date)
-    ]) var transactions: FetchedResults<Transaction>
+    @Binding var transactions: [Transaction]
     
     let stackColors: [Color] = [
         Color.green,
@@ -36,9 +35,13 @@ struct TransactionsChart: View {
                 }
             }
             .chartForegroundStyleScale(range: stackColors)
-//            .frame(height: 160)
             .padding(.horizontal)
         }
+        .frame(height: 160)
+//        .task {
+//            await fetchData()
+//        }
+
     }
 }
 
@@ -46,10 +49,21 @@ extension TransactionsChart {
     func dateString(transaction: Transaction) -> String{
         transaction.wrappedDate.formatted(date: .abbreviated, time: .omitted)
     }
+    
+//    func fetchData() async {
+//        if let session = session {
+//            transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@", session)
+//            let request: NSFetchRequest<Transaction> = Transaction.fetchRequest()
+//            request.sortDescriptors = [NSSortDescriptor(keyPath: \Transaction.date, ascending: true)]
+//            if let sortedRequest = request.sortDescriptors {
+//                transactions.nsSortDescriptors = sortedRequest
+//            }
+//        }
+//    }
 }
 
 struct TransactionsChart_Previews: PreviewProvider {
     static var previews: some View {
-        TransactionsChart()
+        TransactionsChart(transactions: .constant([Transaction]()))
     }
 }

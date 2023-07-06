@@ -17,6 +17,8 @@ struct HomeView: View {
         SortDescriptor(\.date, order: .reverse)
     ]) var transactions: FetchedResults<Transaction>
     
+    @State private var transactionArray = [Transaction]()
+    
     let request: NSFetchRequest<Account> = Account.fetchRequest()
     @State private var selectedAccount: Account?
     
@@ -50,7 +52,7 @@ struct HomeView: View {
                                 .presentationCompactAdaptation(.popover)
                                 .onDisappear {
                                     Task {
-                                        await fetchData(transactions: transactions)
+                                        await fetchData()
                                     }
                                 }
                         }
@@ -87,14 +89,14 @@ struct HomeView: View {
             .padding(.horizontal, 30)
             
             //MARK: - Transactions list
-            FilteredTransactionsView(transactions: _transactions)
+            FilteredTransactionsView(transactions: $transactionArray)
             .listRowSeparator(.hidden)
             .searchable(text: $searchText, placement: SearchFieldPlacement.toolbar, prompt: "Search transactions")
             .onChange(of: searchText) { newValue in
                 filterSearch(text: newValue)
             }
             .task {
-                await fetchData(transactions: transactions)
+                await fetchData()
             }
         } //: VStack
         .navigationTitle("Home")
@@ -118,7 +120,7 @@ extension HomeView {
         return array.reduce(0, +)
     }
     
-    func fetchData(transactions: FetchedResults<Transaction>) async {
+    func fetchData() async {
         if let session = session {
             request.predicate = NSPredicate(format: "number == %@", session)
             selectedAccount = try? moc.fetch(request).first
@@ -134,6 +136,7 @@ extension HomeView {
             sumOfIncome = calculateSum(of: .income)
             sumOfExpenses = calculateSum(of: .expenses)
             
+            transactionArray = transactions.map { $0 }
         }
     }
     

@@ -13,6 +13,8 @@ struct OverviewView: View {
     @AppStorage("session") private var session: String?
     @FetchRequest(sortDescriptors: []) var transactions: FetchedResults<Transaction>
     
+    @State private var transactionArray = [Transaction]()
+    
     var isAddView: Bool = true
 
     @State private var date = Date.now
@@ -34,9 +36,9 @@ struct OverviewView: View {
                         } label: {
                             HeaderAddCardView(image: "square.and.arrow.down.fill", foregroundColor: .green, title: "Add Income", backgroundColor: .backgroundSecondary)
                         }
-                        
+
                         Spacer()
-                        
+
                         NavigationLink {
                             AddView(title: .constant("Expense"), transaction: Transaction(context: moc))
                         } label: {
@@ -50,23 +52,24 @@ struct OverviewView: View {
                 //MARK: - Chart View
                 
                 if !isAddView {
-                    TransactionsChart()
+                    TransactionsChart(transactions: $transactionArray)
                         .padding(.vertical)
                 }
                 
                 //MARK: - BODY LIST
-                FilteredTransactionsView(transactions: _transactions)
-                    .task {
-                        await fetchData(transactions: transactions)
-                    }
+                FilteredTransactionsView(transactions: $transactionArray)
+                
             } //: VStack
+            .task {
+                await fetchData()
+            }
         } //: VStack
         .navigationTitle(isAddView ? "Add Transactions" : "Overview")
         .navigationBarTitleDisplayMode(.inline)
     } //: body
 }
 extension OverviewView {
-    func fetchData(transactions: FetchedResults<Transaction>) async {
+    func fetchData() async {
         if let session = session {
             transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@", session)
             let request: NSFetchRequest<Transaction> = Transaction.fetchRequest()
@@ -74,6 +77,8 @@ extension OverviewView {
             if let sortedRequest = request.sortDescriptors {
                 transactions.nsSortDescriptors = sortedRequest
             }
+            
+            transactionArray = transactions.map { $0 }
         }
     }
     

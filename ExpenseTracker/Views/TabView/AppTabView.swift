@@ -12,7 +12,7 @@ struct AppTabView: View {
     @State private var tabSelection: Tab = .home
     
     enum Tab {
-        case home, overview, wallet, profile
+        case home, overview, add, wallet, profile
     }
     
     //MARK: - body
@@ -50,6 +50,7 @@ struct AppTabView: View {
 //                        Label("Add", systemImage: "plus.circle.fill")
                         Image(systemName: "plus.circle.fill")
                     }
+                    .tag(Tab.add)
 //                    .badge("Add")
                     
                     NavigationStack {
