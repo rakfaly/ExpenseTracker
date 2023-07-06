@@ -87,38 +87,6 @@ struct HomeView: View {
             .padding(.horizontal, 30)
             
             //MARK: - Transactions list
-//            List {
-//                Section {
-//                    ForEach(transactions) { transaction in
-//                        HStack {
-//                            VStack(alignment: .leading) {
-//                                Text(transaction.categoryParent?.wrappedCategory ?? "Unknow Category")
-//                                    .font(.headline.weight(.semibold))
-//                                Text(transaction.wrappedDate, style: .date)
-//                                    .font(.footnote)
-//                                    .foregroundColor(.secondary)
-//                            }
-//                            Spacer()
-//                            //                            Text(transaction.wrappedNature == .income ? +transaction.amount : -transaction.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-//                            Text(transaction.wrappedNature == .income ? "+$\(transaction.formattedAmount)" : "-$\(transaction.formattedAmount)")
-//                                .font(.headline.weight(.semibold))
-//                                .foregroundColor(transaction.wrappedNature == .income ? .green : Color.expenseColor)
-//                        }
-//                    }
-//                    .listRowBackground(Color.backgroundSecondary.opacity(0.2))
-//                } header: {
-//                    HStack {
-//                        Text("Transactions")
-//                            .fontWeight(.semibold)
-//                        Spacer()
-//                        Text("See All")
-//                            .font(.caption)
-//                    }
-//                }
-//            } //: List
-//            .scrollContentBackground(.hidden)
-//            .listRowInsets(EdgeInsets())
-            
             FilteredTransactionsView(transactions: _transactions)
             .listRowSeparator(.hidden)
             .searchable(text: $searchText, placement: SearchFieldPlacement.toolbar, prompt: "Search transactions")
@@ -129,6 +97,8 @@ struct HomeView: View {
                 await fetchData(transactions: transactions)
             }
         } //: VStack
+        .navigationTitle("Home")
+        .navigationBarTitleDisplayMode(.inline)
         .frame(maxWidth: .infinity)
         .background(Color.backgroundMain)
     } //: body
@@ -165,20 +135,6 @@ extension HomeView {
             sumOfExpenses = calculateSum(of: .expenses)
             
         }
-        
-//        if let session = session {
-//            request.predicate = NSPredicate(format: "number == %@", session)
-//            selectedAccount = try? moc.fetch(request).first
-//            //                selectedAccount = accounts.filter {
-//            //                    $0.wrappedNumber == session
-//            //                }.first
-//            if let accountNumber = selectedAccount?.wrappedNumber {
-//                transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@", accountNumber)
-//            }
-//
-//            sumOfIncome = calculateSum(of: .income)
-//            sumOfExpenses = calculateSum(of: .expenses)
-//        }
     }
     
     func filterSearch(text: String) {

@@ -52,7 +52,7 @@ struct StartPageView: View {
                     NavigationLink {
                         if session != nil {
                             withAnimation {
-                                AppTabView().navigationBarBackButtonHidden(true)
+                                CustomTabBar().navigationBarBackButtonHidden(true)
                             }
                         } else {
                             withAnimation {

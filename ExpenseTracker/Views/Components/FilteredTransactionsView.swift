@@ -75,6 +75,12 @@ extension FilteredTransactionsView {
             print("Failed to delete data")
         }
     }
+//
+//    func fetchData() async {
+//        if let session = session {
+//            transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@", session)
+//        }
+//    }
 }
 
 struct FilteredTransactionsView_Previews: PreviewProvider {

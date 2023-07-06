@@ -11,21 +11,27 @@ struct AccountListPopOverView: View {
     @AppStorage("session") private var session: String?
     @FetchRequest(sortDescriptors: []) var accounts: FetchedResults<Account>
     @Environment(\.dismiss) private var dismiss
-        
+    
     var body: some View {
         ZStack {
             Color.backgroundMain
             List {
                 Section {
                     ForEach(accounts) { account in
-                        Text(account.wrappedNumber)
-                            .foregroundColor(session == account.wrappedNumber ? .green : .accentColor)
-                            .onTapGesture {
-                                withAnimation {
-                                    session = account.wrappedNumber
-                                    dismiss()
-                                }
+                        VStack(alignment: .leading) {
+                            Text(account.wrappedTitle)
+                                .font(.footnote)
+                                .foregroundColor(.secondary)
+                            Text(account.wrappedNumber)
+                                .font(.caption.weight(.semibold))
+                                .foregroundColor(session == account.wrappedNumber ? .green : .accentColor)
+                        }
+                        .onTapGesture {
+                            withAnimation {
+                                session = account.wrappedNumber
+                                dismiss()
                             }
+                        }
                     }
                     .formSectionStyle(color: Color.backgroundSecondary.opacity(0.3))
                 } header: {

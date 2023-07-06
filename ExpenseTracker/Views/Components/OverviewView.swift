@@ -61,6 +61,8 @@ struct OverviewView: View {
                     }
             } //: VStack
         } //: VStack
+        .navigationTitle(isAddView ? "Add Transactions" : "Overview")
+        .navigationBarTitleDisplayMode(.inline)
     } //: body
 }
 extension OverviewView {

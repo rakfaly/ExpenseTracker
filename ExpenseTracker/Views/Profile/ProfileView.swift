@@ -69,6 +69,8 @@ struct ProfileView: View {
                 deleteProfile(profile: currentProfile)
             }
         }
+        .navigationTitle("Profile")
+        .navigationBarTitleDisplayMode(.inline)
         .scrollContentBackground(.hidden)
         .background(Color.backgroundMain)
     } //: body

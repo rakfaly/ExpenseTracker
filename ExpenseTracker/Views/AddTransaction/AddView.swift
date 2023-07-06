@@ -26,7 +26,7 @@ struct AddView: View {
     
     @FetchRequest(sortDescriptors: []) var transactions: FetchedResults<Transaction>
     let transaction: Transaction?
-    
+        
     var body: some View {
         ZStack {
             Color.backgroundMain
@@ -110,7 +110,7 @@ struct AddView: View {
             .task {
                 await fetchData()
             }
-        }
+        } //: ZStack
     } //: body
 }
 
@@ -164,7 +164,7 @@ extension AddView {
         amount = transaction.amount
         
         oldAmount = amount
- 
+        
     }
 }
 
