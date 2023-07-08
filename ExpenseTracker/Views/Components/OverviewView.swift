@@ -30,6 +30,8 @@ struct OverviewView: View {
     @State private var showingFilterSheet = false
     
     @State private var selectedAccount: Account?
+    
+    @State private var selectedFilter: String = "All"
     //MARK: - body
     var body: some View {
         ZStack {
@@ -82,7 +84,7 @@ struct OverviewView: View {
             }
         }
         .sheet(isPresented: $showingFilterSheet) {
-            FilteringSheet()
+            FilteringSheet(selected: $selectedFilter, transactionArray: $transactionArray)
                 .presentationDetents([.medium])
         }
         .task {

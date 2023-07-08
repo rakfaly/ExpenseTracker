@@ -14,12 +14,18 @@ struct FilteringSheet: View {
     
     @State private var title = "This Month"
     @State private var image = "circle"
-    @State private var selected = "All"
+    @Binding var selected: String
     
-    let dates = ["This Month", "Last Month", "Next Month", "This Year", "All", "Narrow"]
+    @State private var beginDate: Date = Date()
+    @State private var finishedDate: Date = Date.now.addingTimeInterval(30 * 24 * 60 * 60)  //: next 30 days
+    @State private var showingDatePicker = false
     
-    @FetchRequest(sortDescriptors: []) var transactions: FetchedResults<Transaction>
-//    @Binding var transactionArray: [Transaction]
+    let dates = ["This Month", "Last Month", "Next Month", "This Year", "All", "Narrow Date"]
+    
+    @FetchRequest(sortDescriptors: [
+        SortDescriptor(\.date)
+    ]) var transactions: FetchedResults<Transaction>
+    @Binding var transactionArray: [Transaction]
     
     //MARK: - body
     var body: some View {
@@ -27,7 +33,7 @@ struct FilteringSheet: View {
             Color.backgroundMain.opacity(0.5)
                 .ignoresSafeArea()
             
-            VStack {
+            VStack(alignment: .leading) {
                 HStack {
                     Spacer()
                     Button {
@@ -39,29 +45,76 @@ struct FilteringSheet: View {
                 } //: HStack
                 
                 List {
-                    Section {
-                        ForEach(dates, id: \.self) { text in
+                    if !showingDatePicker {
+                        Section {
+                            ForEach(dates, id: \.self) { text in
+                                HStack {
+                                    Text(text)
+                                    Spacer()
+                                    Image(systemName: selected == text ? "dot.circle" : "circle")
+                                }
+                                .fontWeight(.bold)
+                                .foregroundColor(text == "Narrow Date" ? .mint : .white)
+                                .onTapGesture {
+                                    selected = text
+                                    filterTransactions(by: text)
+                                    if text != "Narrow Date" {
+                                        dismiss()
+                                    }
+                                }
+                            }
+                            .formSectionStyle(color: Color.backgroundSecondary.opacity(0.3))
+                        } header: {
+                            Text("Choose")
+                                .foregroundColor(.secondary)
+                                .fontWeight(.semibold)
+                        } //:Section
+                    }
+                    
+                    if showingDatePicker {
+                        VStack {
                             HStack {
-                                Text(text)
+                                Text("Narrow Date")
+                                    .fontWeight(.semibold)
                                 Spacer()
-                                Image(systemName: selected == text ? "dot.circle" : "circle")
+                                Image(systemName: showingDatePicker ? "chevron.down" : "chevron.right")
                             }
-                            .fontWeight(.bold)
+                            .foregroundColor(Color.mint)
                             .onTapGesture {
-                                selected = text
-                                filterTransactions(by: text)
-                                dismiss()
+                                withAnimation {
+                                    showingDatePicker.toggle()
+                                }
                             }
-                        }
-                        .formSectionStyle(color: Color.backgroundSecondary.opacity(0.3))
-                    } header: {
-                        Text("Choose")
+                            
+                            VStack {
+                                DatePicker("Begin", selection: $beginDate, displayedComponents: .date)
+                                DatePicker("End", selection: $finishedDate, displayedComponents: .date)
+                            }
                             .foregroundColor(.secondary)
-                            .fontWeight(.semibold)
+                            Button {
+                                if let session = session {
+                                    transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@ AND date >= %@ AND date <= %@", session, beginDate as NSDate, finishedDate as NSDate)
+                                    transactionArray = transactions.map { $0 }
+                                }
+                                dismiss()
+                            } label: {
+                                Text("Search")
+                                    .fontWeight(.bold)
+                                    .padding(EdgeInsets(.init(top: 10, leading: 10, bottom: 10, trailing: 10)))
+                                    .background(Color.backgroundMain)
+                                    .clipShape(Capsule())
+                                    .overlay {
+                                        Capsule()
+                                            .stroke(.white, lineWidth: 1)
+                                    }
+                            }
+                            .padding(.top, 30)
+                        } //: VStack
                     }
                 } //: List
                 .scrollContentBackground(.hidden)
-                .frame(height: 320)
+                //                .frame(height: 350)
+                
             } //: VStack
             .padding(.horizontal, 30)
         }
@@ -70,24 +123,42 @@ struct FilteringSheet: View {
 
 extension FilteringSheet {
     func filterTransactions(by date: String) {
+        var dateManager = DateManager()
+        var startDate = Date()
+        var endDate = Date()
+        
         if let session = session {
-            if date == "Last Month" {
-                guard let startDate = Calendar.current.date(byAdding: .month, value: -1, to: Calendar.current.startOfDay(for: Date())), let endDate = Calendar.current.date(byAdding: .day, value: -1, to: Calendar.current.startOfDay(for: Date())) else {
-                    return
+            switch date {
+            case "This Month":
+                (startDate, endDate) = dateManager.getMonth(byAdding: 1)
+            case "Last Month":
+                dateManager.firstDayComponents.month = dateManager.firstDayComponents.month! - 1
+                (startDate, endDate) = dateManager.getMonth(byAdding: 1)
+            case "Next Month":
+                dateManager.firstDayComponents.month = dateManager.firstDayComponents.month! + 1
+                (startDate, endDate) = dateManager.getMonth(byAdding: 1)
+            case "This Year":
+                (startDate, endDate) = dateManager.getYear(byAdding: 1)
+            case "Narrow Date":
+                withAnimation {
+                    showingDatePicker.toggle()
                 }
-                transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@ AND date >= %@ AND date <= %@", session, startDate as NSDate, endDate as NSDate)
-            } else {
+                (startDate, endDate) = (beginDate, finishedDate)
+            default:
                 transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@", session)
             }
             
-//            transactionArray = transactions.map {$0}
+            if date != "All" {
+                transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@ AND date >= %@ AND date <= %@", session, startDate as NSDate, endDate as NSDate)
+            }
+            transactionArray = transactions.map {$0}
         }
     }
 }
 
 struct FilteringSheet_Previews: PreviewProvider {
     static var previews: some View {
-        FilteringSheet()
+        FilteringSheet(selected: .constant("All"), transactionArray: .constant([Transaction]()))
             .preferredColorScheme(.dark)
     }
 }
