@@ -16,14 +16,14 @@ struct AddProfile: View {
     @State private var title: TitleAccount = .currentAccount
     @State private var number = ""
     @State private var balance = 0.0
-    @State private var nature: TransactionCategory = .salary
+    @State private var category: TransactionCategory = .salary
     @State private var date = Date.now
         
     @State private var showingAlert = false
     @State private var messageAlert = ""
     @State private var titleAlert = ""
         
-    @FocusState private var isFocused: NewProfileOrAccount.FocusedField?
+    @FocusState var isFocused: NewProfileOrAccount.FocusedField?
     
     var isDisabled: Bool {
         name.isEmpty || email.isEmpty
@@ -31,7 +31,7 @@ struct AddProfile: View {
             
     //MARK: - Body
     var body: some View {
-        NewProfileOrAccount(name: $name, email: $email, title: $title, number: $number, balance: $balance, nature: $nature, date: $date)
+        NewProfileOrAccount(name: $name, email: $email, title: $title, number: $number, balance: $balance, category: $category, date: $date, isFocused: _isFocused)
         .navigationTitle("Add Profile")
         .navigationBarTitleDisplayMode(.inline)
         .scrollContentBackground(.hidden)
@@ -78,15 +78,21 @@ extension AddProfile {
         profile.name = name
         profile.email = email
         let account = Account(context: moc)
+        account.id = UUID()
         account.profileParent = profile
         account.title = title.rawValue
         account.number = number
         account.balance = balance
         let transaction = Transaction(context: moc)
+        transaction.id = UUID()
         transaction.accountParent = account
         transaction.amount = balance
         transaction.wrappedNature = .income
         transaction.date = date
+        let categoryParent = Category(context: moc)
+        categoryParent.id = UUID()
+        transaction.categoryParent = categoryParent
+        transaction.categoryParent?.category = category.rawValue
                         
         do {
             try moc.save()

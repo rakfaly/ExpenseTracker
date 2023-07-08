@@ -14,6 +14,8 @@ struct FilteredTransactionsView: View {
     @Environment(\.managedObjectContext) var moc
     @Binding var transactions: [Transaction]
     
+    @Binding var listSectionTitle: String
+        
     @State private var title = "Income"
     @State private var date = Date.now
     @State private var transactionCategory = TransactionCategory.salary
@@ -23,9 +25,9 @@ struct FilteredTransactionsView: View {
     var body: some View {
         List {
             Section {
-                ForEach(transactions, id: \.wrappedId) { transaction in
+                ForEach(transactions) { transaction in
                     NavigationLink {
-                        AddView(title: $title, transaction: transaction)
+                        AddView(title: $title, transaction: transaction, date: $date, transactionCategory: $transactionCategory, amount: $amount)
                     } label: {
                         HStack {
                             VStack(alignment: .leading) {
@@ -48,15 +50,12 @@ struct FilteredTransactionsView: View {
                 }
                 .listRowBackground(Color.backgroundSecondary.opacity(0.2))
             } header: {
-                Text("Last Added")
-                    .font(.headline)
+                Text(listSectionTitle)
+                    .font(.footnote)
                     .foregroundColor(.secondary)
             }
         } //: List
         .scrollContentBackground(.hidden)
-//        .task {
-//            await fetchData()
-//        }
     } //: body
 }
 
@@ -72,27 +71,25 @@ extension FilteredTransactionsView {
             }
         }
         
-        do {
-            try moc.save()
-        } catch {
-            print("Failed to delete data")
-        }
+//        transactions = fetchedTransactions.map { $0 }
+        DataController.save(context: moc)
     }
-
-//    func fetchData() async {
+    
+//    func fetchData() {
+//        let fetchedRequest: NSFetchRequest<Transaction> = Transaction.fetchRequest()
 //        if let session = session {
-//            transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@", session)
-//            let request: NSFetchRequest<Transaction> = Transaction.fetchRequest()
-//            request.sortDescriptors = [NSSortDescriptor(keyPath: \Transaction.date, ascending: true)]
-//            if let sortedRequest = request.sortDescriptors {
-//                transactions.nsSortDescriptors = sortedRequest
-//            }
+//            fetchedRequest.predicate = NSPredicate(format: "accountParent.number == %@", session)
+//        }
+//        do {
+//            transactions = try moc.fetch(fetchedRequest)
+//        } catch {
+//            print("Error fetching data")
 //        }
 //    }
 }
 
 struct FilteredTransactionsView_Previews: PreviewProvider {
     static var previews: some View {
-        FilteredTransactionsView(transactions: .constant([Transaction]()))
+        FilteredTransactionsView(transactions: .constant([Transaction]()), listSectionTitle: .constant("Last Added"))
     }
 }

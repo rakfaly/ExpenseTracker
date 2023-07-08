@@ -19,7 +19,7 @@ struct HomeView: View {
     
     @State private var transactionArray = [Transaction]()
     
-    let request: NSFetchRequest<Account> = Account.fetchRequest()
+    let accountRequest: NSFetchRequest<Account> = Account.fetchRequest()
     @State private var selectedAccount: Account?
     
     @State var sumOfIncome: Double?
@@ -89,7 +89,7 @@ struct HomeView: View {
             .padding(.horizontal, 30)
             
             //MARK: - Transactions list
-            FilteredTransactionsView(transactions: $transactionArray)
+            FilteredTransactionsView(transactions: $transactionArray, listSectionTitle: .constant("Last Transactions"))
             .listRowSeparator(.hidden)
             .searchable(text: $searchText, placement: SearchFieldPlacement.toolbar, prompt: "Search transactions")
             .onChange(of: searchText) { newValue in
@@ -110,20 +110,21 @@ extension HomeView {
     func calculateSum(of nature: Transaction.NatureOfTransaction) -> Double {
         var array = [Double]()
         
-        if let transactions = selectedAccount?.wrappedTransactions {
-            for transaction in transactions {
-                if transaction.wrappedNature == nature {
-                    array.append(transaction.amount)
-                }
+        for transaction in transactionArray {
+            if transaction.wrappedNature == nature {
+                array.append(transaction.amount)
             }
         }
+       
         return array.reduce(0, +)
     }
     
     func fetchData() async {
         if let session = session {
-            request.predicate = NSPredicate(format: "number == %@", session)
-            selectedAccount = try? moc.fetch(request).first
+            accountRequest.predicate = NSPredicate(format: "number == %@", session)
+            selectedAccount = try? moc.fetch(accountRequest).first
+             
+//            accounts.nsPredicate = NSPredicate(format: "number == %@", session)
             
             let request: NSFetchRequest<Transaction> = Transaction.fetchRequest()
             transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@", session)
@@ -133,16 +134,17 @@ extension HomeView {
                 transactions.nsSortDescriptors = sortedRequest
             }
             
+            transactionArray = transactions.map { $0 }
             sumOfIncome = calculateSum(of: .income)
             sumOfExpenses = calculateSum(of: .expenses)
             
-            transactionArray = transactions.map { $0 }
         }
     }
     
     func filterSearch(text: String) {
         if let session = session {
             transactions.nsPredicate = text.isEmpty ? NSPredicate(format: "accountParent.number == %@", session) : NSPredicate(format: "accountParent.number == %@ AND categoryParent.category CONTAINS[c] %@", session, text)
+            transactionArray = transactions.map { $0 }
         }
     }
 }

@@ -5,11 +5,14 @@
 //  Created by Faly RAKOTOMAHARO on 28/06/2023.
 //
 
+import CoreData
 import SwiftUI
 
 struct ProfileView: View {
     @Environment(\.managedObjectContext) var moc
     @FetchRequest(sortDescriptors: []) var profiles: FetchedResults<Profile>
+    @FetchRequest(sortDescriptors: []) var categories: FetchedResults<Category>
+    @FetchRequest(sortDescriptors: []) var transactions: FetchedResults<Transaction>
     @AppStorage("session") private var session: String?
     @State private var currentProfile: Profile?
     
@@ -17,6 +20,9 @@ struct ProfileView: View {
     @State private var email = ""
     
     @State private var showingAlert = false
+    @State private var titleAlert = "Confirmation"
+    @State private var messageAlert = "Profile saved successfully!"
+    @State private var isSaved = true
     
     var body: some View {
         Form {
@@ -43,12 +49,16 @@ struct ProfileView: View {
             ToolbarItemGroup {
                 Button {
                     saveProfile(profile: currentProfile)
+                    isSaved = true
+                    showingAlert = true
                 } label: {
                     Text("Save")
                 }
                 .disabled(isDisabled())
                 Button {
+                    isSaved = false
                     showingAlert = true
+                    messageAlert = "Do you really want to delete profile?"
                 } label: {
                     Image(systemName: "trash.circle.fill")
                         .foregroundColor(.red)
@@ -63,11 +73,17 @@ struct ProfileView: View {
                 email = profile.wrappedEmail
             }
         }
-        .alert("Confiramtion", isPresented: $showingAlert) {
-            Button("Cancel", role: .cancel) {}
-            Button("Delete", role: .destructive) {
-                deleteProfile(profile: currentProfile)
+        .alert(titleAlert, isPresented: $showingAlert) {
+            if isSaved {
+                Button("OK", role: .cancel) {}
+            } else {
+                Button("Cancel", role: .cancel) {}
+                Button("Delete", role: .destructive) {
+                    deleteProfile(profile: currentProfile)
+                }
             }
+        } message: {
+            Text(messageAlert)
         }
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
@@ -80,10 +96,24 @@ extension ProfileView {
     func deleteProfile(profile: Profile?) {
         if let currentProfile = profile {
             moc.delete(currentProfile)
+            deleteCategories()
+            deleteTransactions()
             if session != nil {
                 UserDefaults.standard.removeObject(forKey: "session")
             }
             DataController.save(context: moc)
+        }
+    }
+    
+    func deleteCategories() {
+        for category in categories {
+            moc.delete(category)
+        }
+    }
+    
+    func deleteTransactions() {
+        for transaction in transactions {
+            moc.delete(transaction)
         }
     }
     

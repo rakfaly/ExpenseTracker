@@ -28,20 +28,22 @@ struct TransactionsChart: View {
                 ForEach(transactions) { transaction in
                     BarMark(
                         x: .value("Date", dateString(transaction: transaction)),
-                        y: .value("Amount", transaction.amount)
+                        y: .value("Amount", transaction.amount),
+                        width: 50
                     )
                     .foregroundStyle(by: .value("Nature", transaction.wrappedNature.rawValue))
                     .position(by: .value("Nature", transaction.wrappedNature.rawValue))
+                    .annotation {
+                        Text(transaction.formattedAmount)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
                 }
             }
             .chartForegroundStyleScale(range: stackColors)
             .padding(.horizontal)
         }
         .frame(height: 160)
-//        .task {
-//            await fetchData()
-//        }
-
     }
 }
 
@@ -49,17 +51,6 @@ extension TransactionsChart {
     func dateString(transaction: Transaction) -> String{
         transaction.wrappedDate.formatted(date: .abbreviated, time: .omitted)
     }
-    
-//    func fetchData() async {
-//        if let session = session {
-//            transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@", session)
-//            let request: NSFetchRequest<Transaction> = Transaction.fetchRequest()
-//            request.sortDescriptors = [NSSortDescriptor(keyPath: \Transaction.date, ascending: true)]
-//            if let sortedRequest = request.sortDescriptors {
-//                transactions.nsSortDescriptors = sortedRequest
-//            }
-//        }
-//    }
 }
 
 struct TransactionsChart_Previews: PreviewProvider {

@@ -4,7 +4,7 @@
 //
 //  Created by Faly RAKOTOMAHARO on 27/06/2023.
 //
-
+import CoreData
 import SwiftUI
 
 struct StartPageView: View {
@@ -52,7 +52,6 @@ struct StartPageView: View {
                     NavigationLink {
                         if session != nil {
                             withAnimation {
-//                                CustomTabBar().navigationBarBackButtonHidden(true)
                                 AppTabView().navigationBarBackButtonHidden(true)
                             }
                         } else {

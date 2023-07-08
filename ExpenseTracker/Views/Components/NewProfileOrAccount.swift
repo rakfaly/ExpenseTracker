@@ -16,14 +16,15 @@ struct NewProfileOrAccount: View {
     @Binding var title: TitleAccount
     @Binding var number: String
     @Binding var balance: Double
-    @Binding var nature: TransactionCategory
+    @Binding var category: TransactionCategory
     @Binding var date: Date
     
 //    @Binding var showingAlert: Bool
 //    @Binding var messageAlert: String
 //    @Binding var titleAlert: String
     
-    @FocusState private var isFocused: FocusedField?
+    @FocusState var isFocused: FocusedField?
+//    var isFocused: FocusState<FocusedField?>.Binding
     enum FocusedField {
         case decimal
     }
@@ -67,7 +68,7 @@ struct NewProfileOrAccount: View {
                                 selectAllText()
                             }
                         }
-                    Picker("Category", selection: $nature) {
+                    Picker("Category", selection: $category) {
                         ForEach(TransactionCategory.allCases) {
                             Text($0.rawValue)
                                 .tint(.red)
@@ -102,7 +103,7 @@ extension NewProfileOrAccount {
 
 struct NewProfileOrAccount_Previews: PreviewProvider {
     static var previews: some View {
-        NewProfileOrAccount(name: .constant("Taylor Swift"), email: .constant("taylo@swift.com"), title: .constant(.currentAccount), number: .constant("1234 5678 9012 3456"), balance: .constant(2500), nature: .constant(.salary), date: .constant(Date.now))
+        NewProfileOrAccount(name: .constant("Taylor Swift"), email: .constant("taylo@swift.com"), title: .constant(.currentAccount), number: .constant("1234 5678 9012 3456"), balance: .constant(2500), category: .constant(.salary), date: .constant(Date.now))
             .preferredColorScheme(.dark)
     }
 }

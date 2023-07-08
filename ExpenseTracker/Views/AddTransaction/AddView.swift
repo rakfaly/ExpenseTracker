@@ -4,37 +4,39 @@
 //
 //  Created by Faly RAKOTOMAHARO on 01/07/2023.
 //
-
+import CoreData
 import SwiftUI
 
 struct AddView: View {
-    @AppStorage("session") private var session: String?
+    
     @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss
-    @FetchRequest(sortDescriptors: []) var accounts: FetchedResults<Account>
-    @State private var account: Account?
     
     @Binding var title: String
-    @State private var date: Date = Date.now
-    @State private var transactionCategory: TransactionCategory = .salary
-    @State private var amount: Double = 0
+//    var transaction: Transaction
+    var transaction: FetchedResults<Transaction>.Element?
+    @Binding var date: Date
+    @Binding var transactionCategory: TransactionCategory
+    @Binding var amount: Double
     
-    @State private var oldAmount: Double = 0
-        
     @State private var showingAlert: Bool = false
     @FocusState private var isFocused: Bool
     
-    @FetchRequest(sortDescriptors: []) var transactions: FetchedResults<Transaction>
-    let transaction: Transaction?
-        
+    @State private var oldAmount: Double = 0
+    
+    var selectedAccount: FetchedResults<Account>.Element?
+
+    
     var body: some View {
         ZStack {
             Color.backgroundMain
                 .ignoresSafeArea()
             
             VStack(alignment: .leading, spacing: 20) {
-                DatePicker("Select Date", selection: $date, displayedComponents: [.date])
-                    .datePickerStyle(.graphical)
+                if isFocused == false {
+                    DatePicker("Select Date", selection: $date, displayedComponents: [.date])
+                        .datePickerStyle(.graphical)
+                }
                 
                 VStack(alignment: .leading) {
                     Text("\(title) Title")
@@ -59,7 +61,8 @@ struct AddView: View {
                             .font(.title.bold())
                             .foregroundColor(title == "Income" ? .green : Color.expenseColor)
                     }
-                    Slider(value: $amount, in: 0...10000)
+                    Slider(value: $amount, in: 0...10000, step: 5)
+                    
                 } //: VStack
                 
                 Button {
@@ -116,62 +119,101 @@ struct AddView: View {
 
 extension AddView {
     func save() {
-        guard let transaction = transaction else {
-            print("Error occured")
-            return
-        }
-        if transaction.accountParent == nil {
-            transaction.accountParent = account
-            if title == "Income" {
-                account?.balance += amount
-            } else {
-                account?.balance -= amount
-            }
-            transaction.nature = title == "Income" ? Transaction.NatureOfTransaction.income.rawValue : Transaction.NatureOfTransaction.expenses.rawValue
+        if let transaction = transaction {
+            DataController.editTransaction(transaction: transaction, date: date, category: transactionCategory.rawValue, amount: amount, oldAmount: oldAmount, context: moc)
         } else {
-            if let accountBalance = account?.balance {
-                account?.balance = title == "Income" ? (accountBalance - oldAmount + amount) : (accountBalance + oldAmount - amount)
+            if let selectedAccount = selectedAccount {
+                DataController.addTransaction(account: selectedAccount, nature: title, date: date, category: transactionCategory.rawValue, amount: amount, context: moc)
             }
         }
-//        transaction = Transaction(context: moc)
-//        transaction.id = UUID()
-        transaction.amount = amount
-        transaction.date = date
-        if transaction.categoryParent == nil {
-            transaction.categoryParent = Category(context: moc)
-        }
-        transaction.categoryParent?.category = transactionCategory.rawValue
         
-        DataController.save(context: moc)
+        
+        /*
+        if let transaction = transaction {
+            if transaction.id == nil {
+                transaction.id = UUID()
+                transaction.nature = title == "Income" ? Transaction.NatureOfTransaction.income.rawValue : Transaction.NatureOfTransaction.expenses.rawValue
+                
+                let accountRequest: NSFetchRequest<Account> = Account.fetchRequest()
+//                if let session = session {
+//                    accountRequest.predicate = NSPredicate(format: "number == %@", session)
+//                    selectedAccount = try? moc.fetch(accountRequest).first
+//                }
+//                transaction.accountParent = selectedAccount
+//                if let account = selectedAccount {
+//                    if title == "Income" {
+//                        account.balance += amount
+//                    } else {
+//                        account.balance -= amount
+//                    }
+//                }
+                   
+            }  else {
+                if let account = transaction.accountParent {
+                    account.balance = title == "Income" ? (account.balance - oldAmount + amount) : (account.balance + oldAmount - amount)
+                }
+            }
+            
+            transaction.amount = amount
+            transaction.date = date
+            if transaction.categoryParent == nil {
+                transaction.categoryParent = Category(context: moc)
+            }
+            transaction.categoryParent?.category = transactionCategory.rawValue
+            
+            DataController.save(context: moc)
+        }
+        /*
+         guard let transaction = transaction else {
+         print("Error occured")
+         return
+         }
+         if transaction.accountParent == nil {
+         let account = Account(context: moc)
+         transaction.accountParent = account
+         if title == "Income" {
+         account.balance += amount
+         } else {
+         account.balance -= amount
+         }
+         transaction.nature = title == "Income" ? Transaction.NatureOfTransaction.income.rawValue : Transaction.NatureOfTransaction.expenses.rawValue
+         } else {
+         if let account = transaction.accountParent {
+         account.balance = title == "Income" ? (account.balance - oldAmount + amount) : (account.balance + oldAmount - amount)
+         }
+         }
+         //        transaction = Transaction(context: moc)
+         //        transaction.id = UUID()
+         transaction.amount = amount
+         transaction.date = date
+         if transaction.categoryParent == nil {
+         transaction.categoryParent = Category(context: moc)
+         }
+         transaction.categoryParent?.category = transactionCategory.rawValue
+         */
+        //        DataController.save(context: moc)
+         */
     }
     
     func fetchData() async {
-        if let session = session {
-            account = accounts.filter {
-                $0.wrappedNumber == session
-            }.first
+        if let transaction = transaction {
+            title = transaction.wrappedNature.rawValue
+            date = transaction.wrappedDate
+            if let category = transaction.categoryParent?.wrappedCategory {
+                transactionCategory = TransactionCategory(rawValue: category) ?? .salary
+            }
+            amount = transaction.amount
+            
+            oldAmount = amount
         }
-        
-        guard let transaction = transaction else {
-            print("Error Occured on fetchData")
-            return
-        }
-        title = transaction.wrappedNature.rawValue
-        date = transaction.wrappedDate
-        if let category = transaction.categoryParent?.wrappedCategory {
-            transactionCategory = TransactionCategory(rawValue: category) ?? .salary
-        }
-        amount = transaction.amount
-        
-        oldAmount = amount
-        
     }
 }
+
 
 struct AddIncome_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            AddView(title: .constant("Expense"), transaction: .none)
+            AddView(title: .constant("Expense"), transaction: Transaction(), date: .constant(Date.now), transactionCategory: .constant(.salary), amount: .constant(0.0))
                 .preferredColorScheme(.dark)
         }
     }

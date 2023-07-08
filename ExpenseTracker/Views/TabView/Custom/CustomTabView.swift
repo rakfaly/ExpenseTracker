@@ -45,6 +45,8 @@ struct CustomTabView: View {
                     }
                     .tag(Tabs.profile)
                 } //: TabView
+                .animation(.easeInOut(duration: 1), value: tabSelection)
+                .transition(.slide)
             } //: VStack
             
             VStack {

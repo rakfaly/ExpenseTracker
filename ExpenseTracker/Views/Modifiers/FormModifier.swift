@@ -17,7 +17,7 @@ struct FormModifier: ViewModifier {
             .listRowBackground(
                 Capsule()
                     .fill(color)
-                    .padding(.vertical, 2)
+                    .padding(.vertical, 5)
             )
             .listRowSeparator(.hidden)
     }

@@ -19,7 +19,7 @@ struct AccountListView: View {
     @State private var title: TitleAccount = .currentAccount
     @State private var number = ""
     @State private var balance = 0.0
-    @State private var nature: TransactionCategory = .salary
+    @State private var category: TransactionCategory = .salary
     @State private var date = Date.now
     
     @State private var showingAlert = false
@@ -27,6 +27,7 @@ struct AccountListView: View {
     @State private var titleAlert = ""
     
     @State private var selectedAccount = ""
+    @FocusState var isFocused: NewProfileOrAccount.FocusedField?
     
     var body: some View {
         List {
@@ -73,7 +74,7 @@ struct AccountListView: View {
                     }
                 } //: HStack
                 .padding(.horizontal, 30)
-                NewProfileOrAccount(isNewProfile: false, name: $name, email: $email, title: $title, number: $number, balance: $balance, nature: $nature, date: $date)
+                NewProfileOrAccount(isNewProfile: false, name: $name, email: $email, title: $title, number: $number, balance: $balance, category: $category, date: $date, isFocused: _isFocused)
             }.background(Color.backgroundMain)
         }
         .onAppear {
@@ -97,10 +98,14 @@ extension AccountListView {
         account.number = number
         account.balance = balance
         let transaction = Transaction(context: moc)
+        transaction.id = UUID()
         transaction.accountParent = account
         transaction.amount = balance
         transaction.wrappedNature = .income
         transaction.date = date
+        let categoryParent = Category(context: moc)
+        transaction.categoryParent = categoryParent
+        transaction.categoryParent?.category = category.rawValue
         
         do {
             try moc.save()
