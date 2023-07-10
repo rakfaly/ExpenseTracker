@@ -18,13 +18,8 @@ struct NewProfileOrAccount: View {
     @Binding var balance: Double
     @Binding var category: TransactionCategory
     @Binding var date: Date
-    
-//    @Binding var showingAlert: Bool
-//    @Binding var messageAlert: String
-//    @Binding var titleAlert: String
-    
     @FocusState var isFocused: FocusedField?
-//    var isFocused: FocusState<FocusedField?>.Binding
+    
     enum FocusedField {
         case decimal
     }

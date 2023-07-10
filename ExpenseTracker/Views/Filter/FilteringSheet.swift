@@ -26,6 +26,7 @@ struct FilteringSheet: View {
         SortDescriptor(\.date)
     ]) var transactions: FetchedResults<Transaction>
     @Binding var transactionArray: [Transaction]
+    @Binding var sectionFetchedArray: [SectionFetched]
     
     //MARK: - body
     var body: some View {
@@ -95,6 +96,8 @@ struct FilteringSheet: View {
                                 if let session = session {
                                     transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@ AND date >= %@ AND date <= %@", session, beginDate as NSDate, finishedDate as NSDate)
                                     transactionArray = transactions.map { $0 }
+                                    let groupedTransactions = GroupedByDate()
+                                    sectionFetchedArray = groupedTransactions.getTransactionsGroupedByDate(transactions: transactionArray)
                                 }
                                 dismiss()
                             } label: {
@@ -152,13 +155,15 @@ extension FilteringSheet {
                 transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@ AND date >= %@ AND date <= %@", session, startDate as NSDate, endDate as NSDate)
             }
             transactionArray = transactions.map {$0}
+            let groupedTransactions = GroupedByDate()
+            sectionFetchedArray = groupedTransactions.getTransactionsGroupedByDate(transactions: transactionArray)
         }
     }
 }
 
 struct FilteringSheet_Previews: PreviewProvider {
     static var previews: some View {
-        FilteringSheet(selected: .constant("All"), transactionArray: .constant([Transaction]()))
+        FilteringSheet(selected: .constant("All"), transactionArray: .constant([Transaction]()), sectionFetchedArray: .constant([SectionFetched]()))
             .preferredColorScheme(.dark)
     }
 }

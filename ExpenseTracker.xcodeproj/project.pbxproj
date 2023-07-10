@@ -52,6 +52,7 @@
 		60B6A1CB2A53000C00F7C05A /* AccountListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6A1CA2A53000C00F7C05A /* AccountListView.swift */; };
 		60B6A1CE2A53042E00F7C05A /* NewProfileOrAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6A1CD2A53042E00F7C05A /* NewProfileOrAccount.swift */; };
 		60B6A1D12A53311200F7C05A /* FormModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6A1D02A53311200F7C05A /* FormModifier.swift */; };
+		60BE47782A5C807F001E1FD8 /* GroupedByDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BE47772A5C807F001E1FD8 /* GroupedByDate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,6 +101,7 @@
 		60B6A1CA2A53000C00F7C05A /* AccountListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountListView.swift; sourceTree = "<group>"; };
 		60B6A1CD2A53042E00F7C05A /* NewProfileOrAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProfileOrAccount.swift; sourceTree = "<group>"; };
 		60B6A1D02A53311200F7C05A /* FormModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormModifier.swift; sourceTree = "<group>"; };
+		60BE47772A5C807F001E1FD8 /* GroupedByDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupedByDate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,9 +156,11 @@
 		605032812A4FFC250065EE06 /* AddTransaction */ = {
 			isa = PBXGroup;
 			children = (
+				6096F6522A544512007E6650 /* TransactionsChart.swift */,
 				605032882A501B160065EE06 /* AddView.swift */,
 				605032842A5000030065EE06 /* HeaderAddCardView.swift */,
 				6062E1892A585DFE00EA40AB /* TestView.swift */,
+				60BE47772A5C807F001E1FD8 /* GroupedByDate.swift */,
 			);
 			path = AddTransaction;
 			sourceTree = "<group>";
@@ -204,7 +208,6 @@
 			isa = PBXGroup;
 			children = (
 				6060AA712A4B526900FA82EC /* HomeView.swift */,
-				6096F6522A544512007E6650 /* TransactionsChart.swift */,
 				600F98702A55E6930015A228 /* AccountListPopOverView.swift */,
 			);
 			path = HomeView;
@@ -399,6 +402,7 @@
 				6050327D2A4DD05A0065EE06 /* Category+CoreDataClass.swift in Sources */,
 				6050327E2A4DD05A0065EE06 /* Category+CoreDataProperties.swift in Sources */,
 				600F98752A56E9ED0015A228 /* ManualCustomTabBar.swift in Sources */,
+				60BE47782A5C807F001E1FD8 /* GroupedByDate.swift in Sources */,
 				601EE4842A4CBB3600489E8C /* AccountRow.swift in Sources */,
 				6060AA722A4B526900FA82EC /* HomeView.swift in Sources */,
 				6060AA7C2A4B68B000FA82EC /* AppTabView.swift in Sources */,

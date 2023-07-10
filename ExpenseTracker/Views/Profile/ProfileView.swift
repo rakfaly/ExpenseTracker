@@ -60,10 +60,11 @@ struct ProfileView: View {
                     showingAlert = true
                     messageAlert = "Do you really want to delete profile?"
                 } label: {
-                    Image(systemName: "trash.circle.fill")
-                        .foregroundColor(.red)
+                    Image(systemName: "trash.circle")
+                        .foregroundColor(isDisabled() ? .secondary.opacity(0.3) : .red)
                         .font(.headline)
                 }
+                .disabled(isDisabled())
             }
         }
         .onAppear {

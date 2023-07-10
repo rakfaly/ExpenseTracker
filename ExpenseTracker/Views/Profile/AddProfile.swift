@@ -26,7 +26,7 @@ struct AddProfile: View {
     @FocusState var isFocused: NewProfileOrAccount.FocusedField?
     
     var isDisabled: Bool {
-        name.isEmpty || email.isEmpty
+        name.isEmpty || email.isEmpty || number.isEmpty
     }
             
     //MARK: - Body

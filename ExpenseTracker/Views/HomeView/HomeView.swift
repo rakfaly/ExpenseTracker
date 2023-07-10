@@ -124,8 +124,6 @@ extension HomeView {
             accountRequest.predicate = NSPredicate(format: "number == %@", session)
             selectedAccount = try? moc.fetch(accountRequest).first
              
-//            accounts.nsPredicate = NSPredicate(format: "number == %@", session)
-            
             let request: NSFetchRequest<Transaction> = Transaction.fetchRequest()
             transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@", session)
             

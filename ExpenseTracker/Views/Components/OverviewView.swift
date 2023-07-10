@@ -13,9 +13,6 @@ struct OverviewView: View {
     @AppStorage("session") private var session: String?
     @FetchRequest(sortDescriptors: []) var transactions: FetchedResults<Transaction>
     var accounts: NSFetchRequest<Account> = Account.fetchRequest()
-//    @FetchRequest(sortDescriptors: [
-//        SortDescriptor(\.date, order: .reverse)
-//    ]) var transactions: FetchedResults<Transaction>
     let accountRequest: NSFetchRequest<Account> = Account.fetchRequest()
 
     
@@ -32,6 +29,8 @@ struct OverviewView: View {
     @State private var selectedAccount: Account?
     
     @State private var selectedFilter: String = "All"
+    @State private var sectionFetchedArray = [SectionFetched]()
+    
     //MARK: - body
     var body: some View {
         ZStack {
@@ -63,8 +62,9 @@ struct OverviewView: View {
                 //MARK: - Chart View
                 
                 if !isAddView {
-                    TransactionsChart(transactions: $transactionArray)
+                    TransactionsChart(groupedByDateTransactions: $sectionFetchedArray)
                         .padding(.vertical)
+                        
                 }
                 
                 //MARK: - BODY LIST
@@ -84,7 +84,7 @@ struct OverviewView: View {
             }
         }
         .sheet(isPresented: $showingFilterSheet) {
-            FilteringSheet(selected: $selectedFilter, transactionArray: $transactionArray)
+            FilteringSheet(selected: $selectedFilter, transactionArray: $transactionArray, sectionFetchedArray: $sectionFetchedArray)
                 .presentationDetents([.medium])
         }
         .task {
@@ -106,6 +106,9 @@ extension OverviewView {
             }
             
             transactionArray = transactions.map { $0 }
+            
+            let groupedByDate = GroupedByDate()
+            sectionFetchedArray = groupedByDate.getTransactionsGroupedByDate(transactions: transactionArray)
         }
     }    
 }

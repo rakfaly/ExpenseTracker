@@ -71,21 +71,8 @@ extension FilteredTransactionsView {
             }
         }
         
-//        transactions = fetchedTransactions.map { $0 }
         DataController.save(context: moc)
     }
-    
-//    func fetchData() {
-//        let fetchedRequest: NSFetchRequest<Transaction> = Transaction.fetchRequest()
-//        if let session = session {
-//            fetchedRequest.predicate = NSPredicate(format: "accountParent.number == %@", session)
-//        }
-//        do {
-//            transactions = try moc.fetch(fetchedRequest)
-//        } catch {
-//            print("Error fetching data")
-//        }
-//    }
 }
 
 struct FilteredTransactionsView_Previews: PreviewProvider {

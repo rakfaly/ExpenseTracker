@@ -72,6 +72,7 @@ struct AccountListView: View {
                             showingAddAccountSheet = false
                         }
                     }
+                    .disabled(number.isEmpty)
                 } //: HStack
                 .padding(.horizontal, 30)
                 NewProfileOrAccount(isNewProfile: false, name: $name, email: $email, title: $title, number: $number, balance: $balance, category: $category, date: $date, isFocused: _isFocused)
