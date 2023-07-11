@@ -27,6 +27,8 @@ struct HomeView: View {
     
     @State private var searchText = ""
     @State private var showingPopover = false
+    
+    @State private var seeAllItems = 5
         
     //MARK: - body
     var body: some View {
@@ -133,6 +135,8 @@ extension HomeView {
             }
             
             transactionArray = transactions.map { $0 }
+            transactionArray = Array(transactionArray.prefix(upTo: 5))
+           
             sumOfIncome = calculateSum(of: .income)
             sumOfExpenses = calculateSum(of: .expenses)
             

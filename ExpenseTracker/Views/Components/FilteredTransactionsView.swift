@@ -15,12 +15,13 @@ struct FilteredTransactionsView: View {
     @Binding var transactions: [Transaction]
     
     @Binding var listSectionTitle: String
+    @State private var seeAllItems: String = "See All"
         
     @State private var title = "Income"
     @State private var date = Date.now
     @State private var transactionCategory = TransactionCategory.salary
     @State private var amount = 0.0
-        
+            
     //MARK: - body
     var body: some View {
         List {
@@ -50,12 +51,26 @@ struct FilteredTransactionsView: View {
                 }
                 .listRowBackground(Color.backgroundSecondary.opacity(0.2))
             } header: {
-                Text(listSectionTitle)
-                    .font(.footnote)
-                    .foregroundColor(.secondary)
+                HStack {
+                    Text(listSectionTitle)
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text(seeAllItems)
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.blue)
+                        .underline()
+                        .onTapGesture {
+                            Task {
+                                await fetchAll()
+                            }
+                        }
+                }
             }
         } //: List
         .scrollContentBackground(.hidden)
+        
     } //: body
 }
 
@@ -72,6 +87,26 @@ extension FilteredTransactionsView {
         }
         
         DataController.save(context: moc)
+    }
+    
+    func fetchAll() async {
+        let data: NSFetchRequest<Transaction> = Transaction.fetchRequest()
+        if let session = session {
+            data.predicate = NSPredicate(format: "accountParent.number == %@", session)
+            data.sortDescriptors = [NSSortDescriptor(keyPath: \Transaction.date, ascending: false)]
+            do {
+                if seeAllItems == "See All" {
+                    transactions = try moc.fetch(data)
+                    seeAllItems = "Recent"
+                } else {
+                    let temp = try moc.fetch(data)
+                    transactions = Array(temp.prefix(upTo: 5))
+                    seeAllItems = "See All"
+                }
+            } catch {
+                print("Failed to fecth data \(error.localizedDescription)")
+            }
+        }
     }
 }
 
