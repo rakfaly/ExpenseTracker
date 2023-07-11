@@ -91,8 +91,8 @@ iOSInjectionProject/
 
 ## Project-wide
 DS_Store
-TabView/Styles/*.swift
-TabView/Custom/*.swift
-TabView/Tabs.swift
-TabView/CustomTabBar.swift
-AddTransaction/TestView.swift
+Views/TabView/Styles/*.swift
+Views/TabView/Custom/*.swift
+Views/TabView/Tabs.swift
+Views/TabView/CustomTabBar.swift
+Views/AddTransaction/TestView.swift
