@@ -134,8 +134,12 @@ extension HomeView {
                 transactions.nsSortDescriptors = sortedRequest
             }
             
-            transactionArray = transactions.map { $0 }
-            transactionArray = Array(transactionArray.prefix(upTo: 5))
+            let temp = transactions.map { $0 }
+            if temp.count >= 5 {
+                transactionArray = Array(temp.prefix(upTo: 5))
+            } else {
+                transactionArray = temp
+            }
            
             sumOfIncome = calculateSum(of: .income)
             sumOfExpenses = calculateSum(of: .expenses)

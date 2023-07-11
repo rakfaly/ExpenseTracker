@@ -31,4 +31,11 @@ struct DateManager {
         return (startDate: startDate, endDate: endDate)
     }
     
+    func getNarrowDates(beginDate: Date, endDate: Date) -> (startDate: Date, endDate: Date) {
+        guard let endOfDay = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: endDate) else {
+            return (startDate: beginDate, endDate: endDate)
+        }
+        return (startDate: beginDate, endDate: endOfDay)
+    }
+    
 }

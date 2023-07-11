@@ -95,12 +95,16 @@ extension FilteredTransactionsView {
             data.predicate = NSPredicate(format: "accountParent.number == %@", session)
             data.sortDescriptors = [NSSortDescriptor(keyPath: \Transaction.date, ascending: false)]
             do {
+                let temp = try moc.fetch(data)
                 if seeAllItems == "See All" {
-                    transactions = try moc.fetch(data)
+                    transactions = temp
                     seeAllItems = "Recent"
                 } else {
-                    let temp = try moc.fetch(data)
-                    transactions = Array(temp.prefix(upTo: 5))
+                    if temp.count >= 5 {
+                        transactions = Array(temp.prefix(upTo: 5))
+                    } else {
+                        transactions = temp
+                    }
                     seeAllItems = "See All"
                 }
             } catch {

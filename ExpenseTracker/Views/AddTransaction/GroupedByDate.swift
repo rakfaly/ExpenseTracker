@@ -33,7 +33,7 @@ struct GroupedByDate {
         for groups in dictTransactions.keys {
             if let trx = dictTransactions[groups] {
                 for transaction in trx {
-                    let dateString = transaction.wrappedDate.formatted(date: .numeric, time: .omitted)
+                    _ = transaction.wrappedDate.formatted(date: .numeric, time: .omitted)
                     amountGroupByDate[groups, default: []].append(transaction.amount)
                 }
             }
@@ -41,13 +41,13 @@ struct GroupedByDate {
         
         var sectionFetchedArray: [SectionFetched] = []
         
-        for group in amountGroupByDate.sorted(by: { dict1, dict2 in
+        for grp in amountGroupByDate.sorted(by: { dict1, dict2 in
             guard let date1 = dateFormatter.date(from: dict1.key.date), let date2 =  dateFormatter.date(from: dict2.key.date) else {
                 return dict1.key.date < dict2.key.date
             }
             return date1 < date2
         }) {
-            sectionFetchedArray.append(SectionFetched(date: group.key.date, amounts: group.value.reduce(0, +), nature: group.key.nature))
+            sectionFetchedArray.append(SectionFetched(date: grp.key.date, amounts: grp.value.reduce(0, +), nature: grp.key.nature))
         }
                                 
         return sectionFetchedArray

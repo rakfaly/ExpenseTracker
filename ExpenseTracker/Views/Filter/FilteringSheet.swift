@@ -17,8 +17,9 @@ struct FilteringSheet: View {
     @Binding var selected: String
     
     @State private var beginDate: Date = Date()
-    @State private var finishedDate: Date = Date.now.addingTimeInterval(30 * 24 * 60 * 60)  //: next 30 days
+    @State private var finishedDate: Date = Date.now.addingTimeInterval(29 * 24 * 60 * 60)  //: next 30 days
     @State private var showingDatePicker = false
+    @State private var selectedIdOfDatePicker = 0
     
     let dates = ["This Month", "Last Month", "Next Month", "This Year", "All", "Narrow Date"]
     
@@ -89,12 +90,27 @@ struct FilteringSheet: View {
                             
                             VStack {
                                 DatePicker("Begin", selection: $beginDate, displayedComponents: .date)
+                                    .id(selectedIdOfDatePicker)
+                                    .onChange(of: beginDate) { newValue in
+                                        withAnimation {
+                                            selectedIdOfDatePicker += 1
+                                        }
+                                    }
                                 DatePicker("End", selection: $finishedDate, displayedComponents: .date)
+                                    .id(selectedIdOfDatePicker)
+                                    .onChange(of: finishedDate) { newValue in
+                                        withAnimation {
+                                            selectedIdOfDatePicker += 1
+                                        }
+                                    }
                             }
                             .foregroundColor(.secondary)
                             Button {
                                 if let session = session {
-                                    transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@ AND date >= %@ AND date <= %@", session, beginDate as NSDate, finishedDate as NSDate)
+                                    let endOfDay = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: finishedDate)
+                                    if let endDay = endOfDay {
+                                        transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@ AND date >= %@ AND date <= %@", session, beginDate as NSDate, endDay as NSDate)
+                                    }
                                     transactionArray = transactions.map { $0 }
                                     let groupedTransactions = GroupedByDate()
                                     sectionFetchedArray = groupedTransactions.getTransactionsGroupedByDate(transactions: transactionArray)
@@ -146,13 +162,17 @@ extension FilteringSheet {
                 withAnimation {
                     showingDatePicker.toggle()
                 }
-                (startDate, endDate) = (beginDate, finishedDate)
+                (startDate, endDate) = dateManager.getNarrowDates(beginDate: beginDate, endDate: finishedDate)
             default:
                 transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@", session)
             }
             
             if date != "All" {
-                transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@ AND date >= %@ AND date <= %@", session, startDate as NSDate, endDate as NSDate)
+                let calendar = Calendar.current
+                let startOfDay = calendar.startOfDay(for: startDate)
+
+                (beginDate, finishedDate) = (startOfDay, endDate)
+                transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@ AND date >= %@ AND date <= %@", session, beginDate as NSDate, finishedDate as NSDate)
             }
             transactionArray = transactions.map {$0}
             let groupedTransactions = GroupedByDate()
