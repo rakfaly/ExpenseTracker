@@ -90,6 +90,7 @@ struct FilteringSheet: View {
                             
                             VStack {
                                 DatePicker("Begin", selection: $beginDate, displayedComponents: .date)
+//                                    .datePickerStyle(CompactDatePickerStyle())
                                     .id(selectedIdOfDatePicker)
                                     .onChange(of: beginDate) { newValue in
                                         withAnimation {

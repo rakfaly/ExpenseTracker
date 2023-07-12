@@ -17,8 +17,6 @@
 		600F98842A572BE30015A228 /* CustomTabBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600F98832A572BE30015A228 /* CustomTabBarStyle.swift */; };
 		600F98862A572D3A0015A228 /* CustomTabItemStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600F98852A572D3A0015A228 /* CustomTabItemStyle.swift */; };
 		601EE4682A4C57D600489E8C /* ExpenseTracker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 601EE4662A4C57D600489E8C /* ExpenseTracker.xcdatamodeld */; };
-		601EE4732A4C5F8500489E8C /* Profile+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EE46B2A4C5F8500489E8C /* Profile+CoreDataClass.swift */; };
-		601EE4742A4C5F8500489E8C /* Profile+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EE46C2A4C5F8500489E8C /* Profile+CoreDataProperties.swift */; };
 		601EE4772A4C5F8500489E8C /* Account+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EE46F2A4C5F8500489E8C /* Account+CoreDataClass.swift */; };
 		601EE4782A4C5F8500489E8C /* Account+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EE4702A4C5F8500489E8C /* Account+CoreDataProperties.swift */; };
 		601EE47A2A4C627B00489E8C /* AddProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EE4792A4C627B00489E8C /* AddProfile.swift */; };
@@ -54,6 +52,10 @@
 		60B6A1D12A53311200F7C05A /* FormModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6A1D02A53311200F7C05A /* FormModifier.swift */; };
 		60BE47782A5C807F001E1FD8 /* GroupedByDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BE47772A5C807F001E1FD8 /* GroupedByDate.swift */; };
 		60BE477D2A5D38C6001E1FD8 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 60BE477C2A5D38C6001E1FD8 /* .gitignore */; };
+		60BE479D2A5EF186001E1FD8 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BE479C2A5EF186001E1FD8 /* ImagePicker.swift */; };
+		60BE47A02A5EF737001E1FD8 /* Profile+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BE479E2A5EF737001E1FD8 /* Profile+CoreDataClass.swift */; };
+		60BE47A12A5EF737001E1FD8 /* Profile+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BE479F2A5EF737001E1FD8 /* Profile+CoreDataProperties.swift */; };
+		60BE47A32A5F053C001E1FD8 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BE47A22A5F053C001E1FD8 /* ImageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,8 +68,6 @@
 		600F98832A572BE30015A228 /* CustomTabBarStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarStyle.swift; sourceTree = "<group>"; };
 		600F98852A572D3A0015A228 /* CustomTabItemStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabItemStyle.swift; sourceTree = "<group>"; };
 		601EE4672A4C57D600489E8C /* ExpenseTracker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ExpenseTracker.xcdatamodel; sourceTree = "<group>"; };
-		601EE46B2A4C5F8500489E8C /* Profile+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Profile+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
-		601EE46C2A4C5F8500489E8C /* Profile+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Profile+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		601EE46F2A4C5F8500489E8C /* Account+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		601EE4702A4C5F8500489E8C /* Account+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		601EE4792A4C627B00489E8C /* AddProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProfile.swift; sourceTree = "<group>"; };
@@ -104,6 +104,10 @@
 		60B6A1D02A53311200F7C05A /* FormModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormModifier.swift; sourceTree = "<group>"; };
 		60BE47772A5C807F001E1FD8 /* GroupedByDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupedByDate.swift; sourceTree = "<group>"; };
 		60BE477C2A5D38C6001E1FD8 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		60BE479C2A5EF186001E1FD8 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		60BE479E2A5EF737001E1FD8 /* Profile+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Profile+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
+		60BE479F2A5EF737001E1FD8 /* Profile+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Profile+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		60BE47A22A5F053C001E1FD8 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +146,8 @@
 			children = (
 				601EE4792A4C627B00489E8C /* AddProfile.swift */,
 				601EE4812A4CA86700489E8C /* ProfileView.swift */,
+				60BE479C2A5EF186001E1FD8 /* ImagePicker.swift */,
+				60BE47A22A5F053C001E1FD8 /* ImageView.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -236,12 +242,12 @@
 		6060AA752A4B52D300FA82EC /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				60BE479E2A5EF737001E1FD8 /* Profile+CoreDataClass.swift */,
+				60BE479F2A5EF737001E1FD8 /* Profile+CoreDataProperties.swift */,
 				605032772A4DD05A0065EE06 /* Transaction+CoreDataClass.swift */,
 				605032782A4DD05A0065EE06 /* Transaction+CoreDataProperties.swift */,
 				605032792A4DD05A0065EE06 /* Category+CoreDataClass.swift */,
 				6050327A2A4DD05A0065EE06 /* Category+CoreDataProperties.swift */,
-				601EE46B2A4C5F8500489E8C /* Profile+CoreDataClass.swift */,
-				601EE46C2A4C5F8500489E8C /* Profile+CoreDataProperties.swift */,
 				601EE46F2A4C5F8500489E8C /* Account+CoreDataClass.swift */,
 				601EE4702A4C5F8500489E8C /* Account+CoreDataProperties.swift */,
 				601EE4662A4C57D600489E8C /* ExpenseTracker.xcdatamodeld */,
@@ -371,6 +377,7 @@
 				6062E18A2A585DFE00EA40AB /* TestView.swift in Sources */,
 				6050327C2A4DD05A0065EE06 /* Transaction+CoreDataProperties.swift in Sources */,
 				605032892A501B160065EE06 /* AddView.swift in Sources */,
+				60BE47A02A5EF737001E1FD8 /* Profile+CoreDataClass.swift in Sources */,
 				600F98812A57239F0015A228 /* CustomTabBar.swift in Sources */,
 				600F98792A56ED5F0015A228 /* SingleItem.swift in Sources */,
 				600F98712A55E6930015A228 /* AccountListPopOverView.swift in Sources */,
@@ -382,9 +389,11 @@
 				60B6A1D12A53311200F7C05A /* FormModifier.swift in Sources */,
 				600F98842A572BE30015A228 /* CustomTabBarStyle.swift in Sources */,
 				6096F6532A544512007E6650 /* TransactionsChart.swift in Sources */,
+				60BE47A32A5F053C001E1FD8 /* ImageView.swift in Sources */,
 				60273B732A58439D00240592 /* FilteringSheet.swift in Sources */,
 				6096F6552A5475EE007E6650 /* OverviewView.swift in Sources */,
 				600F98862A572D3A0015A228 /* CustomTabItemStyle.swift in Sources */,
+				60BE47A12A5EF737001E1FD8 /* Profile+CoreDataProperties.swift in Sources */,
 				604CE7222A555041009E4979 /* TitleAccount.swift in Sources */,
 				601EE4802A4C6F7500489E8C /* AlertMessage.swift in Sources */,
 				600F98772A56EADA0015A228 /* Tabs.swift in Sources */,
@@ -394,13 +403,12 @@
 				605032802A4DD5B30065EE06 /* TransactionCategory.swift in Sources */,
 				6050327B2A4DD05A0065EE06 /* Transaction+CoreDataClass.swift in Sources */,
 				60B6A1CE2A53042E00F7C05A /* NewProfileOrAccount.swift in Sources */,
-				601EE4732A4C5F8500489E8C /* Profile+CoreDataClass.swift in Sources */,
 				601EE47C2A4C62F400489E8C /* DataController.swift in Sources */,
 				605032852A5000030065EE06 /* HeaderAddCardView.swift in Sources */,
+				60BE479D2A5EF186001E1FD8 /* ImagePicker.swift in Sources */,
 				6096F6592A548A9B007E6650 /* FilteredTransactionsView.swift in Sources */,
 				601EE4782A4C5F8500489E8C /* Account+CoreDataProperties.swift in Sources */,
 				601EE47A2A4C627B00489E8C /* AddProfile.swift in Sources */,
-				601EE4742A4C5F8500489E8C /* Profile+CoreDataProperties.swift in Sources */,
 				60B6A1CB2A53000C00F7C05A /* AccountListView.swift in Sources */,
 				600F98732A56E8A20015A228 /* CustomTabView.swift in Sources */,
 				6050327D2A4DD05A0065EE06 /* Category+CoreDataClass.swift in Sources */,
@@ -545,8 +553,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -574,8 +582,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

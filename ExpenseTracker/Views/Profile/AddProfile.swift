@@ -5,12 +5,13 @@
 //  Created by Faly RAKOTOMAHARO on 28/06/2023.
 //
 
+import CoreData
 import SwiftUI
 
 struct AddProfile: View {
     //MARK: - Properties    
     @Environment(\.managedObjectContext) var moc
-    
+    @State private var uiImage:UIImage = UIImage()
     @State private var name = ""
     @State private var email = ""
     @State private var title: TitleAccount = .currentAccount
@@ -31,7 +32,7 @@ struct AddProfile: View {
             
     //MARK: - Body
     var body: some View {
-        NewProfileOrAccount(name: $name, email: $email, title: $title, number: $number, balance: $balance, category: $category, date: $date, isFocused: _isFocused)
+        NewProfileOrAccount(name: $name, email: $email, photo: $uiImage, title: $title, number: $number, balance: $balance, category: $category, date: $date, isFocused: _isFocused)
         .navigationTitle("Add Profile")
         .navigationBarTitleDisplayMode(.inline)
         .scrollContentBackground(.hidden)
@@ -76,6 +77,7 @@ extension AddProfile {
         let profile = Profile(context: moc)
         profile.id = UUID()
         profile.name = name
+        profile.photo = uiImage.jpegData(compressionQuality: 0.8)
         profile.email = email
         let account = Account(context: moc)
         account.id = UUID()

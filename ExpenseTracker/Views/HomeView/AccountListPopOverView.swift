@@ -35,7 +35,7 @@ struct AccountListPopOverView: View {
                     }
                     .formSectionStyle(color: Color.backgroundSecondary.opacity(0.3))
                 } header: {
-                    Text("Change Account")
+                    Text("Select Account")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                 }

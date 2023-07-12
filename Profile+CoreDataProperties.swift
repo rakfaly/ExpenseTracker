@@ -2,7 +2,7 @@
 //  Profile+CoreDataProperties.swift
 //  ExpenseTracker
 //
-//  Created by Faly RAKOTOMAHARO on 28/06/2023.
+//  Created by Faly RAKOTOMAHARO on 12/07/2023.
 //
 //
 
@@ -16,9 +16,10 @@ extension Profile {
         return NSFetchRequest<Profile>(entityName: "Profile")
     }
 
+    @NSManaged public var email: String?
     @NSManaged public var id: UUID?
     @NSManaged public var name: String?
-    @NSManaged public var email: String?
+    @NSManaged public var photo: Data?
     @NSManaged public var accounts: NSSet?
     
     public var wrappedId: UUID {
@@ -27,6 +28,10 @@ extension Profile {
     
     public var wrappedName: String {
         name ?? "Unknown Name"
+    }
+    
+    public var wrappedPhoto: Data {
+        photo ?? Data()
     }
     
     public var wrappedEmail: String {

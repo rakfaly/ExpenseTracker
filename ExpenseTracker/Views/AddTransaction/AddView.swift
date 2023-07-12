@@ -8,7 +8,7 @@ import CoreData
 import SwiftUI
 
 struct AddView: View {
-    
+    //MARK: - Properties
     @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss
     
@@ -27,6 +27,7 @@ struct AddView: View {
     var selectedAccount: FetchedResults<Account>.Element?
 
     
+    //MARK: - body
     var body: some View {
         ZStack {
             Color.backgroundMain

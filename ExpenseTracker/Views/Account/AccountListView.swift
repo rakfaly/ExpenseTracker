@@ -16,6 +16,8 @@ struct AccountListView: View {
     
     @State private var name = ""
     @State private var email = ""
+    @State private var uiImage = UIImage()
+    
     @State private var title: TitleAccount = .currentAccount
     @State private var number = ""
     @State private var balance = 0.0
@@ -75,7 +77,7 @@ struct AccountListView: View {
                     .disabled(number.isEmpty)
                 } //: HStack
                 .padding(.horizontal, 30)
-                NewProfileOrAccount(isNewProfile: false, name: $name, email: $email, title: $title, number: $number, balance: $balance, category: $category, date: $date, isFocused: _isFocused)
+                NewProfileOrAccount(isNewProfile: false, name: $name, email: $email, photo: $uiImage, title: $title, number: $number, balance: $balance, category: $category, date: $date, isFocused: _isFocused)
             }.background(Color.backgroundMain)
         }
         .onAppear {

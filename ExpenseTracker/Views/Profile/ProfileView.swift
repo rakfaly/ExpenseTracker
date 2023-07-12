@@ -18,6 +18,8 @@ struct ProfileView: View {
     
     @State private var name = ""
     @State private var email = ""
+    @State private var photo: UIImage = UIImage()
+    @State private var image: Image?
     
     @State private var showingAlert = false
     @State private var titleAlert = "Confirmation"
@@ -25,66 +27,66 @@ struct ProfileView: View {
     @State private var isSaved = true
     
     var body: some View {
-        Form {
-            Section {
-                TextField(text: $name) {
-                    Text("Name").foregroundColor(.secondary)
+        VStack {
+            ImageView(photo: $photo, image: $image)
+            
+            Form {
+                Section {
+                    TextField(text: $name) {
+                        Text("Name").foregroundColor(.secondary)
+                    }
+                } header: {
+                    Text("Name").foregroundColor(.backgroundSecondary)
                 }
-            } header: {
-                Text("Name").foregroundColor(.backgroundSecondary)
-            }
-            .formSectionStyle(color: Color.backgroundSecondary.opacity(0.3))
-            Section {
-                TextField(text: $email) {
+                .formSectionStyle(color: Color.backgroundSecondary.opacity(0.3))
+                Section {
+                    TextField(text: $email) {
+                        Text("Email")
+                            .foregroundColor(.secondary)
+                    }
+                } header: {
                     Text("Email")
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.backgroundSecondary)
                 }
-            } header: {
-                Text("Email")
-                    .foregroundColor(.backgroundSecondary)
+                .formSectionStyle(color: Color.backgroundSecondary.opacity(0.3))
             }
-            .formSectionStyle(color: Color.backgroundSecondary.opacity(0.3))
-        }
-        .toolbar {
-            ToolbarItemGroup {
-                Button {
-                    saveProfile(profile: currentProfile)
-                    isSaved = true
-                    showingAlert = true
-                } label: {
-                    Text("Save")
-                }
-                .disabled(isDisabled())
-                Button {
-                    isSaved = false
-                    showingAlert = true
-                    messageAlert = "Do you really want to delete profile?"
-                } label: {
-                    Image(systemName: "trash.circle")
-                        .foregroundColor(isDisabled() ? .secondary.opacity(0.3) : .red)
-                        .font(.headline)
-                }
-                .disabled(isDisabled())
-            }
-        }
-        .onAppear {
-            if let profile = profiles.last {
-                currentProfile = profile
-                name = profile.wrappedName
-                email = profile.wrappedEmail
-            }
-        }
-        .alert(titleAlert, isPresented: $showingAlert) {
-            if isSaved {
-                Button("OK", role: .cancel) {}
-            } else {
-                Button("Cancel", role: .cancel) {}
-                Button("Delete", role: .destructive) {
-                    deleteProfile(profile: currentProfile)
+            .toolbar {
+                ToolbarItemGroup {
+                    Button {
+                        saveProfile(profile: currentProfile)
+                        isSaved = true
+                        showingAlert = true
+                    } label: {
+                        Text("Save")
+                    }
+                    .disabled(isDisabled())
+                    Button {
+                        isSaved = false
+                        showingAlert = true
+                        messageAlert = "Do you really want to delete profile?"
+                    } label: {
+                        Image(systemName: "trash.circle")
+                            .foregroundColor(isDisabled() ? .secondary.opacity(0.3) : .red)
+                            .font(.headline)
+                    }
+                    .disabled(isDisabled())
                 }
             }
-        } message: {
-            Text(messageAlert)
+            .task {
+                await loadProfile()
+            }
+            .alert(titleAlert, isPresented: $showingAlert) {
+                if isSaved {
+                    Button("OK", role: .cancel) {}
+                } else {
+                    Button("Cancel", role: .cancel) {}
+                    Button("Delete", role: .destructive) {
+                        deleteProfile(profile: currentProfile)
+                    }
+                }
+            } message: {
+                Text(messageAlert)
+            }
         }
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
@@ -94,6 +96,18 @@ struct ProfileView: View {
 }
 
 extension ProfileView {
+    func loadProfile() async {
+        if let profile = profiles.last {
+            currentProfile = profile
+            name = profile.wrappedName
+            email = profile.wrappedEmail
+            if let uiImage = UIImage(data: profile.wrappedPhoto) {
+                photo = uiImage
+                image = Image(uiImage: photo)
+            }
+        }
+    }
+    
     func deleteProfile(profile: Profile?) {
         if let currentProfile = profile {
             moc.delete(currentProfile)
@@ -122,6 +136,7 @@ extension ProfileView {
         if let currentProfile = profile {
             currentProfile.name = name
             currentProfile.email = email
+            currentProfile.photo = photo.jpegData(compressionQuality: 1.0)
             DataController.save(context: moc)
         }
     }
