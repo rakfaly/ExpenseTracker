@@ -19,12 +19,10 @@ struct AddView: View {
     @Binding var transactionCategory: TransactionCategory
     @Binding var amount: Double
     
-    @State private var showingAlert: Bool = false
-    @FocusState private var isFocused: Bool
-    
-    @State private var oldAmount: Double = 0
-    
+    @FocusState private var isFocused: Bool    
     var selectedAccount: FetchedResults<Account>.Element?
+    
+    @StateObject private var addViewModel = AddViewModel()
 
     
     //MARK: - body
@@ -68,7 +66,7 @@ struct AddView: View {
                 
                 Button {
                     save()
-                    showingAlert.toggle()
+                    addViewModel.showingAlert.toggle()
                 } label: {
                     Text("Save")
                         .font(.title.weight(.semibold))
@@ -88,7 +86,7 @@ struct AddView: View {
             .navigationTitle("Add \(title)")
             .navigationBarTitleDisplayMode(.inline)
             .padding(30)
-            .alert(DataController.alertTitle, isPresented: $showingAlert) {
+            .alert(DataController.alertTitle, isPresented: $addViewModel.showingAlert) {
                 Button("OK") {
                     dismiss()
                 }
@@ -121,7 +119,7 @@ struct AddView: View {
 extension AddView {
     func save() {
         if let transaction = transaction {
-            DataController.editTransaction(transaction: transaction, date: date, category: transactionCategory.rawValue, amount: amount, oldAmount: oldAmount, context: moc)
+            DataController.editTransaction(transaction: transaction, date: date, category: transactionCategory.rawValue, amount: amount, oldAmount: addViewModel.oldAmount, context: moc)
         } else {
             if let selectedAccount = selectedAccount {
                 DataController.addTransaction(account: selectedAccount, nature: title, date: date, category: transactionCategory.rawValue, amount: amount, context: moc)
@@ -138,7 +136,7 @@ extension AddView {
             }
             amount = transaction.amount
             
-            oldAmount = amount
+            addViewModel.oldAmount = amount
         }
     }
 }

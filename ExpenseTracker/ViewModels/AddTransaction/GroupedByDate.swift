@@ -51,47 +51,5 @@ struct GroupedByDate {
         }
                                 
         return sectionFetchedArray
-        /*
-        let dictTransactions = Dictionary(grouping: transactions, by: {$0.wrappedDate.formatted(date: .numeric, time: .omitted)})
-        
-        var amountsByDate: [Date: [Double]] = [:]
-        var naturesByDate: [Date: [String]] = [:]
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd/MM/yy"
-        
-        for dates in dictTransactions.keys {
-            if let trx = dictTransactions[dates], let date = dateFormatter.date(from: dates) {
-                for transaction in trx {
-                    amountsByDate[date, default: []].append(transaction.amount)
-                    naturesByDate[date, default: []].append(transaction.wrappedNature.rawValue)
-                }
-            }
-        }
-        
-                
-        var groupedAmounts: [Date: Double] = [:]
-        var groupedNatures: [Date: String] = [:]
-        
-        for dict in amountsByDate.sorted(by: {$0.0 < $1.0}) {
-            groupedAmounts[dict.key] = dict.value.reduce(0, +)
-        }
-        for dict in naturesByDate {
-            groupedNatures[dict.key] = Set(dict.value.map {$0}).first
-        }
-        
-        var sectionFetchedArray: [SectionFetched] = []
-                
-        for amountDate in groupedAmounts.keys {
-            for natureDate in groupedNatures.keys {
-                if amountDate == natureDate {
-                    if let amount = groupedAmounts[amountDate], let nature = groupedNatures[amountDate] {
-                        sectionFetchedArray.append(SectionFetched(date: amountDate, amounts: amount, nature: nature))
-                    }
-                }
-            }
-        }
-                
-        return sectionFetchedArray
-         */
     }
 }

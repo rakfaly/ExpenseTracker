@@ -60,6 +60,12 @@
 		60D0DBD52A6122F200155493 /* AddProfile-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D0DBD42A6122F200155493 /* AddProfile-ViewModel.swift */; };
 		60D0DBD72A612A8400155493 /* ImageView-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D0DBD62A612A8400155493 /* ImageView-ViewModel.swift */; };
 		60D0DBDA2A61320900155493 /* FilteringSheet-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D0DBD92A61320900155493 /* FilteringSheet-ViewModel.swift */; };
+		60D0DBDD2A619E5F00155493 /* AccountListView-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D0DBDC2A619E5F00155493 /* AccountListView-ViewModel.swift */; };
+		60D0DBE02A61A12800155493 /* Home-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D0DBDF2A61A12800155493 /* Home-ViewModel.swift */; };
+		60D0DBE42A61A44400155493 /* FilteredTransactionsView-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D0DBE32A61A44400155493 /* FilteredTransactionsView-ViewModel.swift */; };
+		60D0DBE62A61AE3100155493 /* NewProfileOrAccountView-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D0DBE52A61AE3100155493 /* NewProfileOrAccountView-ViewModel.swift */; };
+		60D0DBE82A61AF3300155493 /* OverviewView-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D0DBE72A61AF3300155493 /* OverviewView-ViewModel.swift */; };
+		60D0DBEB2A61B2AB00155493 /* AddTransactionView-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D0DBEA2A61B2AB00155493 /* AddTransactionView-ViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -116,6 +122,12 @@
 		60D0DBD42A6122F200155493 /* AddProfile-ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddProfile-ViewModel.swift"; sourceTree = "<group>"; };
 		60D0DBD62A612A8400155493 /* ImageView-ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageView-ViewModel.swift"; sourceTree = "<group>"; };
 		60D0DBD92A61320900155493 /* FilteringSheet-ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FilteringSheet-ViewModel.swift"; sourceTree = "<group>"; };
+		60D0DBDC2A619E5F00155493 /* AccountListView-ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AccountListView-ViewModel.swift"; sourceTree = "<group>"; };
+		60D0DBDF2A61A12800155493 /* Home-ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Home-ViewModel.swift"; sourceTree = "<group>"; };
+		60D0DBE32A61A44400155493 /* FilteredTransactionsView-ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FilteredTransactionsView-ViewModel.swift"; sourceTree = "<group>"; };
+		60D0DBE52A61AE3100155493 /* NewProfileOrAccountView-ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NewProfileOrAccountView-ViewModel.swift"; sourceTree = "<group>"; };
+		60D0DBE72A61AF3300155493 /* OverviewView-ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OverviewView-ViewModel.swift"; sourceTree = "<group>"; };
+		60D0DBEA2A61B2AB00155493 /* AddTransactionView-ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddTransactionView-ViewModel.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,7 +187,6 @@
 				605032882A501B160065EE06 /* AddView.swift */,
 				605032842A5000030065EE06 /* HeaderAddCardView.swift */,
 				6062E1892A585DFE00EA40AB /* TestView.swift */,
-				60BE47772A5C807F001E1FD8 /* GroupedByDate.swift */,
 			);
 			path = AddTransaction;
 			sourceTree = "<group>";
@@ -199,9 +210,9 @@
 		6060AA5E2A4B119C00FA82EC /* ExpenseTracker */ = {
 			isa = PBXGroup;
 			children = (
-				60D0DBD02A607B9A00155493 /* ViewModels */,
 				6060AA752A4B52D300FA82EC /* Models */,
 				6060AA742A4B52C600FA82EC /* Views */,
+				60D0DBD02A607B9A00155493 /* ViewModels */,
 				6060AA5F2A4B119C00FA82EC /* ExpenseTrackerApp.swift */,
 				6060AA612A4B119C00FA82EC /* ContentView.swift */,
 				6060AA6D2A4B132A00FA82EC /* Extensions.swift */,
@@ -267,11 +278,10 @@
 		6060AA7A2A4B688100FA82EC /* TabView */ = {
 			isa = PBXGroup;
 			children = (
+				60D0DBE12A61A3DC00155493 /* CustomTabBar */,
 				600F98822A572BBD0015A228 /* Styles */,
 				6060AA7B2A4B68B000FA82EC /* AppTabView.swift */,
 				600F987F2A57237D0015A228 /* Custom */,
-				600F98762A56EADA0015A228 /* Tabs.swift */,
-				600F98802A57239F0015A228 /* CustomTabBar.swift */,
 			);
 			path = TabView;
 			sourceTree = "<group>";
@@ -308,6 +318,10 @@
 		60D0DBD02A607B9A00155493 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				60D0DBE92A61B28300155493 /* AddTransaction */,
+				60D0DBE22A61A41F00155493 /* Components */,
+				60D0DBDE2A61A11800155493 /* Home */,
+				60D0DBDB2A619E3E00155493 /* Account */,
 				60D0DBD82A6131E700155493 /* FilterByDate */,
 				60D0DBD12A607BB500155493 /* Profile */,
 			);
@@ -331,6 +345,50 @@
 				60D0DBD92A61320900155493 /* FilteringSheet-ViewModel.swift */,
 			);
 			path = FilterByDate;
+			sourceTree = "<group>";
+		};
+		60D0DBDB2A619E3E00155493 /* Account */ = {
+			isa = PBXGroup;
+			children = (
+				60D0DBDC2A619E5F00155493 /* AccountListView-ViewModel.swift */,
+			);
+			path = Account;
+			sourceTree = "<group>";
+		};
+		60D0DBDE2A61A11800155493 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				60D0DBDF2A61A12800155493 /* Home-ViewModel.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		60D0DBE12A61A3DC00155493 /* CustomTabBar */ = {
+			isa = PBXGroup;
+			children = (
+				600F98762A56EADA0015A228 /* Tabs.swift */,
+				600F98802A57239F0015A228 /* CustomTabBar.swift */,
+			);
+			path = CustomTabBar;
+			sourceTree = "<group>";
+		};
+		60D0DBE22A61A41F00155493 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				60D0DBE32A61A44400155493 /* FilteredTransactionsView-ViewModel.swift */,
+				60D0DBE52A61AE3100155493 /* NewProfileOrAccountView-ViewModel.swift */,
+				60D0DBE72A61AF3300155493 /* OverviewView-ViewModel.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		60D0DBE92A61B28300155493 /* AddTransaction */ = {
+			isa = PBXGroup;
+			children = (
+				60BE47772A5C807F001E1FD8 /* GroupedByDate.swift */,
+				60D0DBEA2A61B2AB00155493 /* AddTransactionView-ViewModel.swift */,
+			);
+			path = AddTransaction;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -421,11 +479,15 @@
 				6060AA622A4B119C00FA82EC /* ContentView.swift in Sources */,
 				6083DDAD2A59DD00006B6E4C /* DateManager.swift in Sources */,
 				6060AA702A4B3E4700FA82EC /* StartPageView.swift in Sources */,
+				60D0DBE42A61A44400155493 /* FilteredTransactionsView-ViewModel.swift in Sources */,
 				60D0DBD72A612A8400155493 /* ImageView-ViewModel.swift in Sources */,
 				6060AA6E2A4B132B00FA82EC /* Extensions.swift in Sources */,
+				60D0DBDD2A619E5F00155493 /* AccountListView-ViewModel.swift in Sources */,
 				601EE4682A4C57D600489E8C /* ExpenseTracker.xcdatamodeld in Sources */,
 				60B6A1D12A53311200F7C05A /* FormModifier.swift in Sources */,
 				600F98842A572BE30015A228 /* CustomTabBarStyle.swift in Sources */,
+				60D0DBE82A61AF3300155493 /* OverviewView-ViewModel.swift in Sources */,
+				60D0DBE62A61AE3100155493 /* NewProfileOrAccountView-ViewModel.swift in Sources */,
 				6096F6532A544512007E6650 /* TransactionsChart.swift in Sources */,
 				60BE47A32A5F053C001E1FD8 /* ImageView.swift in Sources */,
 				60D0DBD52A6122F200155493 /* AddProfile-ViewModel.swift in Sources */,
@@ -441,12 +503,14 @@
 				601EE4772A4C5F8500489E8C /* Account+CoreDataClass.swift in Sources */,
 				601EE4822A4CA86700489E8C /* ProfileView.swift in Sources */,
 				605032802A4DD5B30065EE06 /* TransactionCategory.swift in Sources */,
+				60D0DBE02A61A12800155493 /* Home-ViewModel.swift in Sources */,
 				6050327B2A4DD05A0065EE06 /* Transaction+CoreDataClass.swift in Sources */,
 				60B6A1CE2A53042E00F7C05A /* NewProfileOrAccount.swift in Sources */,
 				601EE47C2A4C62F400489E8C /* DataController.swift in Sources */,
 				605032852A5000030065EE06 /* HeaderAddCardView.swift in Sources */,
 				60BE479D2A5EF186001E1FD8 /* ImagePicker.swift in Sources */,
 				6096F6592A548A9B007E6650 /* FilteredTransactionsView.swift in Sources */,
+				60D0DBEB2A61B2AB00155493 /* AddTransactionView-ViewModel.swift in Sources */,
 				601EE4782A4C5F8500489E8C /* Account+CoreDataProperties.swift in Sources */,
 				601EE47A2A4C627B00489E8C /* AddProfile.swift in Sources */,
 				60B6A1CB2A53000C00F7C05A /* AccountListView.swift in Sources */,

@@ -24,15 +24,13 @@ struct NewProfileOrAccount: View {
     enum FocusedField {
         case decimal
     }
-
-    @State private var image: Image?
-    @State private var inputImage: UIImage?
-    @State private var showingPhotoSheet = false
+    
+    @StateObject private var newProfileOrAccountViewModel = NewProfileOrAccountViewModel()
     
     //MARK: - Body
     var body: some View {
         VStack {
-            ImageView(photo: $photo, image: $image)
+            ImageView(photo: $photo, image: $newProfileOrAccountViewModel.image)
             
             Form {
                 Group {
@@ -66,7 +64,7 @@ struct NewProfileOrAccount: View {
                             .keyboardType(.decimalPad)
                             .onChange(of: isFocused) { newValue in
                                 if newValue == .decimal {
-                                    selectAllText()
+                                    newProfileOrAccountViewModel.selectAllText()
                                 }
                             }
                         Picker("Category", selection: $category) {
@@ -94,12 +92,6 @@ struct NewProfileOrAccount: View {
         }
         .background(Color.backgroundMain)
     } //: body
-}
-
-extension NewProfileOrAccount {
-    func selectAllText() {
-        UIApplication.shared.sendAction(#selector(UIResponder.selectAll(_:)), to: nil, from: nil, for: nil)
-    }
 }
 
 

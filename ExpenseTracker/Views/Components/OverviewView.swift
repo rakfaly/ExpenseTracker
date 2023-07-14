@@ -10,27 +10,13 @@ import SwiftUI
 struct OverviewView: View {
     //MARK: - Properties
     @Environment(\.managedObjectContext) private var moc
-    @AppStorage("session") private var session: String?
     @FetchRequest(sortDescriptors: []) var transactions: FetchedResults<Transaction>
     var accounts: NSFetchRequest<Account> = Account.fetchRequest()
     let accountRequest: NSFetchRequest<Account> = Account.fetchRequest()
-
     
-    @State private var transactionArray = [Transaction]()
+    var isAddView: Bool
+    @StateObject private var overviewViewModel = OverviewViewModel()
     
-    var isAddView: Bool = true
-
-    @State private var date = Date.now
-    @State private var transactionCategory = TransactionCategory.salary
-    @State private var amount = 0.0
-    
-    @State private var showingFilterSheet = false
-    
-    @State private var selectedAccount: Account?
-    
-//    @State private var selectedFilter: String = "All"
-    @State private var sectionFetchedArray = [SectionFetched]()
-        
     //MARK: - body
     var body: some View {
         ZStack {
@@ -42,7 +28,7 @@ struct OverviewView: View {
                 if isAddView {
                     HStack {
                         NavigationLink {
-                            AddView(title: .constant(Transaction.NatureOfTransaction.income.rawValue), date: $date, transactionCategory: $transactionCategory, amount: $amount, selectedAccount: selectedAccount)
+                            AddView(title: .constant(Transaction.NatureOfTransaction.income.rawValue), date: $overviewViewModel.date, transactionCategory: $overviewViewModel.transactionCategory, amount: $overviewViewModel.amount, selectedAccount: overviewViewModel.selectedAccount)
                         } label: {
                             HeaderAddCardView(image: "square.and.arrow.down.fill", foregroundColor: .green, title: "Add Income", backgroundColor: .backgroundSecondary)
                         }
@@ -50,7 +36,7 @@ struct OverviewView: View {
                         Spacer()
 
                         NavigationLink {
-                            AddView(title: .constant(Transaction.NatureOfTransaction.expenses.rawValue), date: $date, transactionCategory: $transactionCategory, amount: $amount, selectedAccount: selectedAccount)
+                            AddView(title: .constant(Transaction.NatureOfTransaction.expenses.rawValue), date: $overviewViewModel.date, transactionCategory: $overviewViewModel.transactionCategory, amount: $overviewViewModel.amount, selectedAccount: overviewViewModel.selectedAccount)
                         } label: {
                             HeaderAddCardView(image: "square.and.arrow.up.fill", foregroundColor: Color.expenseColor, title: "Add Expense", backgroundColor: .orangeBackground)
                         }
@@ -62,13 +48,13 @@ struct OverviewView: View {
                 //MARK: - Chart View
                 
                 if !isAddView {
-                    TransactionsChart(groupedByDateTransactions: $sectionFetchedArray)
+                    TransactionsChart(groupedByDateTransactions: $overviewViewModel.sectionFetchedArray)
                         .padding(.vertical)
                         
                 }
                 
                 //MARK: - BODY LIST
-                FilteredTransactionsView(transactions: $transactionArray, listSectionTitle: isAddView ? .constant("Last Added") : .constant("Transactions"))
+                FilteredTransactionsView(transactions: $overviewViewModel.transactionArray, listSectionTitle: isAddView ? .constant("Last Added") : .constant("Transactions"))
             } //: VStack
         } //: VStack
         
@@ -77,44 +63,22 @@ struct OverviewView: View {
         .toolbar {
             if !isAddView {
                 Button {
-                    showingFilterSheet.toggle()
+                    overviewViewModel.showingFilterSheet.toggle()
                 } label: {
                     Label("Filter", systemImage: "line.3.horizontal.decrease.circle.fill")
                 }
             }
         }
-        .sheet(isPresented: $showingFilterSheet) {
-//            FilteringSheet(transactionArray: transactionArray, sectionFetchedArray: sectionFetchedArray, onUpdate: { filteringSheetModel in
-//                (transactionArray, sectionFetchedArray) = filteringSheetModel.updateArray(transactions: transactions)
-//            })
-            FilteringSheet(transactionArray: $transactionArray, sectionFetchedArray: $sectionFetchedArray)
+        .sheet(isPresented: $overviewViewModel.showingFilterSheet) {
+            FilteringSheet(transactionArray: $overviewViewModel.transactionArray, sectionFetchedArray: $overviewViewModel.sectionFetchedArray)
                 .presentationDetents([.medium])
         }
         .task {
-            await fetchData()
+            await overviewViewModel.fetchData(moc: moc, transactions: transactions, accounts: accounts, isAddView: isAddView)
         }
     } //: body
 }
-extension OverviewView {
-    func fetchData() async {
-        if let session = session {
-            accounts.predicate = NSPredicate(format: "number == %@", session)
-            selectedAccount = try? moc.fetch(accounts).first
-            transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@", session)
-            
-            let request: NSFetchRequest<Transaction> = Transaction.fetchRequest()
-            request.sortDescriptors = [NSSortDescriptor(keyPath: \Transaction.date, ascending: isAddView ? false : true)]
-            if let sortedRequest = request.sortDescriptors {
-                transactions.nsSortDescriptors = sortedRequest
-            }
-            
-            transactionArray = transactions.map { $0 }
-            
-            let groupedByDate = GroupedByDate()
-            sectionFetchedArray = groupedByDate.getTransactionsGroupedByDate(transactions: transactionArray)
-        }
-    }    
-}
+
 
 struct OverviewView_Previews: PreviewProvider {
     static var previews: some View {

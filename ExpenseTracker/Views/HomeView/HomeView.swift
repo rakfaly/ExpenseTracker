@@ -8,28 +8,17 @@ import CoreData
 import SwiftUI
 
 struct HomeView: View {
-    //MARK: - Properties
-    @AppStorage("session") private var session: String?
-    
+    //MARK: - Properties    
     @Environment(\.managedObjectContext) var moc
     @FetchRequest(sortDescriptors: []) var accounts: FetchedResults<Account>
     @FetchRequest(sortDescriptors: [
         SortDescriptor(\.date, order: .reverse)
     ]) var transactions: FetchedResults<Transaction>
     
-    @State private var transactionArray = [Transaction]()
-    
     let accountRequest: NSFetchRequest<Account> = Account.fetchRequest()
-    @State private var selectedAccount: Account?
     
-    @State var sumOfIncome: Double?
-    @State var sumOfExpenses: Double?
+    @StateObject private var homeViewModel = HomeViewModel()
     
-    @State private var searchText = ""
-    @State private var showingPopover = false
-    
-    @State private var seeAllItems = 5
-        
     //MARK: - body
     var body: some View {
         VStack {
@@ -44,24 +33,24 @@ struct HomeView: View {
                         Spacer()
                         
                         Button {
-                            showingPopover.toggle()
+                            homeViewModel.showingPopover.toggle()
                         } label: {
                             Image(systemName: "ellipsis.circle")
                         }
-                        .popover(isPresented: $showingPopover) {
+                        .popover(isPresented: $homeViewModel.showingPopover) {
                             AccountListPopOverView()
                                 .frame(width: 200, height: 150)
                                 .presentationCompactAdaptation(.popover)
                                 .onDisappear {
                                     Task {
-                                        await fetchData()
+                                        await homeViewModel.fetchData(moc: moc, accountRequest: accountRequest, transactions: transactions)
                                     }
                                 }
                         }
                     }
                     .font(.footnote)
                     .padding(.bottom, -1)
-                    Text(selectedAccount?.balance ?? 0.0 , format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                    Text(homeViewModel.selectedAccount?.balance ?? 0.0 , format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                         .font(.title2.weight(.bold))
                 }
                 .padding()
@@ -69,13 +58,13 @@ struct HomeView: View {
                 HStack {
                     VStack(spacing: 5) {
                         Label("Income", systemImage: "arrow.down.circle.fill")
-                        Text(sumOfIncome ?? 0.0, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                        Text(homeViewModel.sumOfIncome ?? 0.0, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                             .font(.subheadline.weight(.semibold))
                     }
                     Spacer()
                     VStack(spacing: 5) {
                         Label("Expenses", systemImage: "arrow.up.circle.fill")
-                        Text(sumOfExpenses ?? 0.0, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                        Text(homeViewModel.sumOfExpenses ?? 0.0, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                             .font(.subheadline.weight(.semibold))
                     }
                 }
@@ -91,14 +80,14 @@ struct HomeView: View {
             .padding(.horizontal, 30)
             
             //MARK: - Transactions list
-            FilteredTransactionsView(transactions: $transactionArray, listSectionTitle: .constant("Last Transactions"))
+            FilteredTransactionsView(transactions: $homeViewModel.transactionArray, listSectionTitle: .constant("Last Transactions"))
             .listRowSeparator(.hidden)
-            .searchable(text: $searchText, placement: SearchFieldPlacement.toolbar, prompt: "Search transactions")
-            .onChange(of: searchText) { newValue in
-                filterSearch(text: newValue)
+            .searchable(text: $homeViewModel.searchText, placement: SearchFieldPlacement.toolbar, prompt: "Search transactions")
+            .onChange(of: homeViewModel.searchText) { newValue in
+                homeViewModel.filterSearch(text: newValue, transactions: transactions)
             }
             .task {
-                await fetchData()
+                await homeViewModel.fetchData(moc: moc, accountRequest: accountRequest, transactions: transactions)
             }
         } //: VStack
         .navigationTitle("Home")
@@ -107,54 +96,6 @@ struct HomeView: View {
         .background(Color.backgroundMain)
     } //: body
 }
-
-extension HomeView {
-    func calculateSum(of nature: Transaction.NatureOfTransaction) -> Double {
-        var array = [Double]()
-        
-        for transaction in transactionArray {
-            if transaction.wrappedNature == nature {
-                array.append(transaction.amount)
-            }
-        }
-       
-        return array.reduce(0, +)
-    }
-    
-    func fetchData() async {
-        if let session = session {
-            accountRequest.predicate = NSPredicate(format: "number == %@", session)
-            selectedAccount = try? moc.fetch(accountRequest).first
-             
-            let request: NSFetchRequest<Transaction> = Transaction.fetchRequest()
-            transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@", session)
-            
-            request.sortDescriptors = [NSSortDescriptor(keyPath: \Transaction.date, ascending: false)]
-            if let sortedRequest = request.sortDescriptors {
-                transactions.nsSortDescriptors = sortedRequest
-            }
-            
-            let temp = transactions.map { $0 }
-            if temp.count >= 5 {
-                transactionArray = Array(temp.prefix(upTo: 5))
-            } else {
-                transactionArray = temp
-            }
-           
-            sumOfIncome = calculateSum(of: .income)
-            sumOfExpenses = calculateSum(of: .expenses)
-            
-        }
-    }
-    
-    func filterSearch(text: String) {
-        if let session = session {
-            transactions.nsPredicate = text.isEmpty ? NSPredicate(format: "accountParent.number == %@", session) : NSPredicate(format: "accountParent.number == %@ AND categoryParent.category CONTAINS[c] %@", session, text)
-            transactionArray = transactions.map { $0 }
-        }
-    }
-}
-
 
 //MARK: - Preview
 struct HomeView_Previews: PreviewProvider {
