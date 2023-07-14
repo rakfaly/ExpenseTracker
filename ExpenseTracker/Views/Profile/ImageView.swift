@@ -8,11 +8,10 @@
 import SwiftUI
 
 struct ImageView: View {
-    @State private var showingPhotoSheet = false
-    @State private var inputImage: UIImage?
+    @StateObject private var imageViewModel = ImageViewModel()
     @Binding var photo: UIImage
     @Binding var image: Image?
-    
+        
     var body: some View {
         ZStack {
             Circle()
@@ -29,22 +28,14 @@ struct ImageView: View {
         } //: ZStack
         .padding(.top)
         .onTapGesture {
-            showingPhotoSheet = true
+            imageViewModel.showingPhotoSheet = true
         }
-        .sheet(isPresented: $showingPhotoSheet) {
-            ImagePicker(image: $inputImage)
+        .sheet(isPresented: $imageViewModel.showingPhotoSheet) {
+            ImagePicker(image: $imageViewModel.inputImage)
         }
-        .onChange(of: inputImage) { _ in
-            loadImage()
+        .onChange(of: imageViewModel.inputImage) { _ in
+            (photo: photo, image: image) = imageViewModel.loadImage()
         }
-    }
-}
-
-extension ImageView {
-    func loadImage() {
-        guard let inputImage = inputImage else { return }
-        photo = inputImage
-        image = Image(uiImage: photo)
     }
 }
 

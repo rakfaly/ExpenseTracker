@@ -28,9 +28,9 @@ struct OverviewView: View {
     
     @State private var selectedAccount: Account?
     
-    @State private var selectedFilter: String = "All"
+//    @State private var selectedFilter: String = "All"
     @State private var sectionFetchedArray = [SectionFetched]()
-    
+        
     //MARK: - body
     var body: some View {
         ZStack {
@@ -84,7 +84,10 @@ struct OverviewView: View {
             }
         }
         .sheet(isPresented: $showingFilterSheet) {
-            FilteringSheet(selected: $selectedFilter, transactionArray: $transactionArray, sectionFetchedArray: $sectionFetchedArray)
+//            FilteringSheet(transactionArray: transactionArray, sectionFetchedArray: sectionFetchedArray, onUpdate: { filteringSheetModel in
+//                (transactionArray, sectionFetchedArray) = filteringSheetModel.updateArray(transactions: transactions)
+//            })
+            FilteringSheet(transactionArray: $transactionArray, sectionFetchedArray: $sectionFetchedArray)
                 .presentationDetents([.medium])
         }
         .task {

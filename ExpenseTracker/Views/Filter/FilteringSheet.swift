@@ -5,30 +5,29 @@
 //  Created by Faly RAKOTOMAHARO on 07/07/2023.
 //
 
+import CoreData
 import SwiftUI
 
 struct FilteringSheet: View {
     //MARK: - Properties
-    @AppStorage("session") private var session: String?
     @Environment(\.dismiss) var dismiss
-    
-    @State private var title = "This Month"
-    @State private var image = "circle"
-    @Binding var selected: String
-    
-    @State private var beginDate: Date = Date()
-    @State private var finishedDate: Date = Date.now.addingTimeInterval(29 * 24 * 60 * 60)  //: next 30 days
-    @State private var showingDatePicker = false
-    @State private var selectedIdOfDatePicker = 0
-    
-    let dates = ["This Month", "Last Month", "Next Month", "This Year", "All", "Narrow Date"]
+    @Environment(\.managedObjectContext) var moc
+    @StateObject private var filteringSheetModel = FilterDateViewModel()
     
     @FetchRequest(sortDescriptors: [
         SortDescriptor(\.date)
     ]) var transactions: FetchedResults<Transaction>
+        
+//    var onUpdate: (FilterDateViewModel) -> Void
     @Binding var transactionArray: [Transaction]
     @Binding var sectionFetchedArray: [SectionFetched]
     
+//    init(transactionArray: [Transaction], sectionFetchedArray: [SectionFetched], onUpdate: @escaping (FilterDateViewModel) -> Void) {
+//        self.transactionArray = transactionArray
+//        self.sectionFetchedArray = sectionFetchedArray
+//        self.onUpdate = onUpdate
+//    }
+  
     //MARK: - body
     var body: some View {
         ZStack {
@@ -47,19 +46,20 @@ struct FilteringSheet: View {
                 } //: HStack
                 
                 List {
-                    if !showingDatePicker {
+                    if !filteringSheetModel.showingDatePicker {
                         Section {
-                            ForEach(dates, id: \.self) { text in
+                            ForEach(filteringSheetModel.dates, id: \.self) { text in
                                 HStack {
                                     Text(text)
                                     Spacer()
-                                    Image(systemName: selected == text ? "dot.circle" : "circle")
+                                    Image(systemName: filteringSheetModel.selectedMonth == text ? "dot.circle" : "circle")
                                 }
                                 .fontWeight(.bold)
                                 .foregroundColor(text == "Narrow Date" ? .mint : .white)
                                 .onTapGesture {
-                                    selected = text
-                                    filterTransactions(by: text)
+                                    filteringSheetModel.selectedMonth = text
+                                    filteringSheetModel.filterTransactions(by: text, transactions: transactions)
+                                    (transactionArray, sectionFetchedArray) = filteringSheetModel.updateArray(transactions: transactions)
                                     if text != "Narrow Date" {
                                         dismiss()
                                     }
@@ -73,49 +73,41 @@ struct FilteringSheet: View {
                         } //:Section
                     }
                     
-                    if showingDatePicker {
+                    if filteringSheetModel.showingDatePicker {
                         VStack {
                             HStack {
                                 Text("Narrow Date")
                                     .fontWeight(.semibold)
                                 Spacer()
-                                Image(systemName: showingDatePicker ? "chevron.down" : "chevron.right")
+                                Image(systemName: filteringSheetModel.showingDatePicker ? "chevron.down" : "chevron.right")
                             }
                             .foregroundColor(Color.mint)
                             .onTapGesture {
                                 withAnimation {
-                                    showingDatePicker.toggle()
+                                    filteringSheetModel.showingDatePicker.toggle()
                                 }
                             }
                             
                             VStack {
-                                DatePicker("Begin", selection: $beginDate, displayedComponents: .date)
+                                DatePicker("Begin", selection: $filteringSheetModel.beginDate, displayedComponents: .date)
 //                                    .datePickerStyle(CompactDatePickerStyle())
-                                    .id(selectedIdOfDatePicker)
-                                    .onChange(of: beginDate) { newValue in
+                                    .id(filteringSheetModel.selectedIdOfDatePicker)
+                                    .onChange(of: filteringSheetModel.beginDate) { newValue in
                                         withAnimation {
-                                            selectedIdOfDatePicker += 1
+                                            filteringSheetModel.selectedIdOfDatePicker += 1
                                         }
                                     }
-                                DatePicker("End", selection: $finishedDate, displayedComponents: .date)
-                                    .id(selectedIdOfDatePicker)
-                                    .onChange(of: finishedDate) { newValue in
+                                DatePicker("End", selection: $filteringSheetModel.finishedDate, displayedComponents: .date)
+                                    .id(filteringSheetModel.selectedIdOfDatePicker)
+                                    .onChange(of: filteringSheetModel.finishedDate) { newValue in
                                         withAnimation {
-                                            selectedIdOfDatePicker += 1
+                                            filteringSheetModel.selectedIdOfDatePicker += 1
                                         }
                                     }
                             }
                             .foregroundColor(.secondary)
                             Button {
-                                if let session = session {
-                                    let endOfDay = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: finishedDate)
-                                    if let endDay = endOfDay {
-                                        transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@ AND date >= %@ AND date <= %@", session, beginDate as NSDate, endDay as NSDate)
-                                    }
-                                    transactionArray = transactions.map { $0 }
-                                    let groupedTransactions = GroupedByDate()
-                                    sectionFetchedArray = groupedTransactions.getTransactionsGroupedByDate(transactions: transactionArray)
-                                }
+                                filteringSheetModel.filterNarrowDate(transactions: transactions)
                                 dismiss()
                             } label: {
                                 Text("Search")
@@ -137,54 +129,14 @@ struct FilteringSheet: View {
                 
             } //: VStack
             .padding(.horizontal, 30)
-        }
-    }
+        } //: ZStack
+    } //: body
 }
 
-extension FilteringSheet {
-    func filterTransactions(by date: String) {
-        var dateManager = DateManager()
-        var startDate = Date()
-        var endDate = Date()
-        
-        if let session = session {
-            switch date {
-            case "This Month":
-                (startDate, endDate) = dateManager.getMonth(byAdding: 1)
-            case "Last Month":
-                dateManager.firstDayComponents.month = dateManager.firstDayComponents.month! - 1
-                (startDate, endDate) = dateManager.getMonth(byAdding: 1)
-            case "Next Month":
-                dateManager.firstDayComponents.month = dateManager.firstDayComponents.month! + 1
-                (startDate, endDate) = dateManager.getMonth(byAdding: 1)
-            case "This Year":
-                (startDate, endDate) = dateManager.getYear(byAdding: 1)
-            case "Narrow Date":
-                withAnimation {
-                    showingDatePicker.toggle()
-                }
-                (startDate, endDate) = dateManager.getNarrowDates(beginDate: beginDate, endDate: finishedDate)
-            default:
-                transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@", session)
-            }
-            
-            if date != "All" {
-                let calendar = Calendar.current
-                let startOfDay = calendar.startOfDay(for: startDate)
-
-                (beginDate, finishedDate) = (startOfDay, endDate)
-                transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@ AND date >= %@ AND date <= %@", session, beginDate as NSDate, finishedDate as NSDate)
-            }
-            transactionArray = transactions.map {$0}
-            let groupedTransactions = GroupedByDate()
-            sectionFetchedArray = groupedTransactions.getTransactionsGroupedByDate(transactions: transactionArray)
-        }
-    }
-}
 
 struct FilteringSheet_Previews: PreviewProvider {
     static var previews: some View {
-        FilteringSheet(selected: .constant("All"), transactionArray: .constant([Transaction]()), sectionFetchedArray: .constant([SectionFetched]()))
+        FilteringSheet(transactionArray: .constant([Transaction]()), sectionFetchedArray: .constant([SectionFetched]()))
             .preferredColorScheme(.dark)
     }
 }

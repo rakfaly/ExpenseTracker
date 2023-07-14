@@ -9,41 +9,34 @@ import CoreData
 import SwiftUI
 
 struct ProfileView: View {
+    @StateObject private var profileViewModel = ProfileViewModel()
     @Environment(\.managedObjectContext) var moc
     @FetchRequest(sortDescriptors: []) var profiles: FetchedResults<Profile>
     @FetchRequest(sortDescriptors: []) var categories: FetchedResults<Category>
     @FetchRequest(sortDescriptors: []) var transactions: FetchedResults<Transaction>
-    @AppStorage("session") private var session: String?
-    @State private var currentProfile: Profile?
     
-    @State private var name = ""
-    @State private var email = ""
-    @State private var photo: UIImage = UIImage()
-    @State private var image: Image?
-    
-    @State private var showingAlert = false
-    @State private var titleAlert = "Confirmation"
-    @State private var messageAlert = "Profile saved successfully!"
-    @State private var isSaved = true
+    @FocusState private var isFocused
     
     var body: some View {
         VStack {
-            ImageView(photo: $photo, image: $image)
+            ImageView(photo: $profileViewModel.photo, image: $profileViewModel.image)
             
             Form {
                 Section {
-                    TextField(text: $name) {
+                    TextField(text: $profileViewModel.name) {
                         Text("Name").foregroundColor(.secondary)
                     }
+                    .focused($isFocused)
                 } header: {
                     Text("Name").foregroundColor(.backgroundSecondary)
                 }
                 .formSectionStyle(color: Color.backgroundSecondary.opacity(0.3))
                 Section {
-                    TextField(text: $email) {
+                    TextField(text: $profileViewModel.email) {
                         Text("Email")
                             .foregroundColor(.secondary)
                     }
+                    .focused($isFocused)
                 } header: {
                     Text("Email")
                         .foregroundColor(.backgroundSecondary)
@@ -53,41 +46,43 @@ struct ProfileView: View {
             .toolbar {
                 ToolbarItemGroup {
                     Button {
-                        saveProfile(profile: currentProfile)
-                        isSaved = true
-                        showingAlert = true
+                        profileViewModel.saveProfile(profile: profileViewModel.currentProfile, moc: moc)
+                        profileViewModel.isSaved = true
+                        profileViewModel.showingAlert = true
+                        isFocused = false
                     } label: {
                         Text("Save")
                     }
-                    .disabled(isDisabled())
+                    .disabled(profileViewModel.isDisabled())
                     Button {
-                        isSaved = false
-                        showingAlert = true
-                        messageAlert = "Do you really want to delete profile?"
+                        profileViewModel.isSaved = false
+                        profileViewModel.showingAlert = true
+                        profileViewModel.messageAlert = "Do you really want to delete profile?"
+                        isFocused = false
                     } label: {
                         Image(systemName: "trash.circle")
-                            .foregroundColor(isDisabled() ? .secondary.opacity(0.3) : .red)
+                            .foregroundColor(profileViewModel.isDisabled() ? .secondary.opacity(0.3) : .red)
                             .font(.headline)
                     }
-                    .disabled(isDisabled())
+                    .disabled(profileViewModel.isDisabled())
                 }
             }
             .task {
-                await loadProfile()
+                await profileViewModel.loadProfile(profiles: profiles)
             }
-            .alert(titleAlert, isPresented: $showingAlert) {
-                if isSaved {
+            .alert(profileViewModel.titleAlert, isPresented: $profileViewModel.showingAlert) {
+                if profileViewModel.isSaved {
                     Button("OK", role: .cancel) {}
                 } else {
                     Button("Cancel", role: .cancel) {}
                     Button("Delete", role: .destructive) {
-                        deleteProfile(profile: currentProfile)
+                        profileViewModel.deleteProfile(profile: profileViewModel.currentProfile, categories: categories, transactions: transactions, moc: moc)
                     }
                 }
             } message: {
-                Text(messageAlert)
+                Text(profileViewModel.messageAlert)
             }
-        }
+        } // VStack
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
         .scrollContentBackground(.hidden)
@@ -95,56 +90,6 @@ struct ProfileView: View {
     } //: body
 }
 
-extension ProfileView {
-    func loadProfile() async {
-        if let profile = profiles.last {
-            currentProfile = profile
-            name = profile.wrappedName
-            email = profile.wrappedEmail
-            if let uiImage = UIImage(data: profile.wrappedPhoto) {
-                photo = uiImage
-                image = Image(uiImage: photo)
-            }
-        }
-    }
-    
-    func deleteProfile(profile: Profile?) {
-        if let currentProfile = profile {
-            moc.delete(currentProfile)
-            deleteCategories()
-            deleteTransactions()
-            if session != nil {
-                UserDefaults.standard.removeObject(forKey: "session")
-            }
-            DataController.save(context: moc)
-        }
-    }
-    
-    func deleteCategories() {
-        for category in categories {
-            moc.delete(category)
-        }
-    }
-    
-    func deleteTransactions() {
-        for transaction in transactions {
-            moc.delete(transaction)
-        }
-    }
-    
-    func saveProfile(profile: Profile?) {
-        if let currentProfile = profile {
-            currentProfile.name = name
-            currentProfile.email = email
-            currentProfile.photo = photo.jpegData(compressionQuality: 1.0)
-            DataController.save(context: moc)
-        }
-    }
-    
-    func isDisabled() -> Bool {
-        name.isEmpty || email.isEmpty || currentProfile == nil
-    }
-}
 
 struct Profile_Previews: PreviewProvider {
     static var previews: some View {

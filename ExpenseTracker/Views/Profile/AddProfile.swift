@@ -11,28 +11,12 @@ import SwiftUI
 struct AddProfile: View {
     //MARK: - Properties    
     @Environment(\.managedObjectContext) var moc
-    @State private var uiImage:UIImage = UIImage()
-    @State private var name = ""
-    @State private var email = ""
-    @State private var title: TitleAccount = .currentAccount
-    @State private var number = ""
-    @State private var balance = 0.0
-    @State private var category: TransactionCategory = .salary
-    @State private var date = Date.now
-        
-    @State private var showingAlert = false
-    @State private var messageAlert = ""
-    @State private var titleAlert = ""
-        
+    @StateObject private var addProfileViewModel = AddProfileViewModel()
     @FocusState var isFocused: NewProfileOrAccount.FocusedField?
-    
-    var isDisabled: Bool {
-        name.isEmpty || email.isEmpty || number.isEmpty
-    }
             
     //MARK: - Body
     var body: some View {
-        NewProfileOrAccount(name: $name, email: $email, photo: $uiImage, title: $title, number: $number, balance: $balance, category: $category, date: $date, isFocused: _isFocused)
+        NewProfileOrAccount(name: $addProfileViewModel.name, email: $addProfileViewModel.email, photo: $addProfileViewModel.uiImage, title: $addProfileViewModel.title, number: $addProfileViewModel.number, balance: $addProfileViewModel.balance, category: $addProfileViewModel.category, date: $addProfileViewModel.date, isFocused: _isFocused)
         .navigationTitle("Add Profile")
         .navigationBarTitleDisplayMode(.inline)
         .scrollContentBackground(.hidden)
@@ -44,10 +28,10 @@ struct AddProfile: View {
                 } label: {
                     Text("Save")
                 } .simultaneousGesture(TapGesture().onEnded({ _ in
-                    saveData()
+                    addProfileViewModel.saveData(moc: moc)
                 }))
                 .padding(.trailing)
-                .disabled(isDisabled)
+                .disabled(addProfileViewModel.isDisabled)
             }
             
             ToolbarItem(placement: .keyboard) {
@@ -64,59 +48,11 @@ struct AddProfile: View {
                 }
             }
         }
-        .alert(titleAlert, isPresented: $showingAlert) {
+        .alert(addProfileViewModel.titleAlert, isPresented: $addProfileViewModel.showingAlert) {
             Button("OK") {}
         } message: {
-            Text(messageAlert)
+            Text(addProfileViewModel.messageAlert)
         }
-    }
-}
-
-extension AddProfile {
-    func saveData() {
-        let profile = Profile(context: moc)
-        profile.id = UUID()
-        profile.name = name
-        profile.photo = uiImage.jpegData(compressionQuality: 0.8)
-        profile.email = email
-        let account = Account(context: moc)
-        account.id = UUID()
-        account.profileParent = profile
-        account.title = title.rawValue
-        account.number = number
-        account.balance = balance
-        let transaction = Transaction(context: moc)
-        transaction.id = UUID()
-        transaction.accountParent = account
-        transaction.amount = balance
-        transaction.wrappedNature = .income
-        transaction.date = date
-        let categoryParent = Category(context: moc)
-        categoryParent.id = UUID()
-        transaction.categoryParent = categoryParent
-        transaction.categoryParent?.category = category.rawValue
-                        
-        do {
-            try moc.save()
-            saveSession(account: account.wrappedNumber)
-            /*
-            showingAlert = true
-            titleAlert = "Confirmation"
-            messageAlert = AlertMessage.saveSucces.rawValue*/
-        } catch {
-            print("Failed to save data: \(error.localizedDescription)")
-            showingAlert = true
-            titleAlert = "Something went wrong!"
-            messageAlert = AlertMessage.saveFailed.rawValue
-        }
-    }
-    
-    func selectAllText() {
-        UIApplication.shared.sendAction(#selector(UIResponder.selectAll(_:)), to: nil, from: nil, for: nil)
-    }
-    
-    func saveSession(account: String) {
-        UserDefaults.standard.set(account, forKey: "session")
     }
 }
 
