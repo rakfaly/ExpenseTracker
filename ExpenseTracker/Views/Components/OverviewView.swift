@@ -54,7 +54,6 @@ struct OverviewView: View {
                 FilteredTransactionsView(transactions: $overviewViewModel.transactionArray, listSectionTitle: isAddView ? .constant("Last Added") : .constant("Transactions"))
             } //: VStack
         } //: VStack
-        
         .navigationTitle(isAddView ? "Add Transactions" : "Overview")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

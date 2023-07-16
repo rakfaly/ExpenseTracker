@@ -25,7 +25,7 @@ struct NewProfileOrAccount: View {
         case decimal
     }
     
-    @StateObject private var newProfileOrAccountViewModel = NewProfileOrAccountViewModel()
+    @StateObject var newProfileOrAccountViewModel = NewProfileOrAccountViewModel()
     
     //MARK: - Body
     var body: some View {
@@ -36,7 +36,7 @@ struct NewProfileOrAccount: View {
                 Group {
                     if isNewProfile {
                         Section {
-                                TextField("Name", text: $name)
+                            TextField("Name", text: $name)
                                 TextField("Email", text: $email)
                             } header: {
                                 Text("User")
@@ -96,7 +96,7 @@ struct NewProfileOrAccount: View {
 
 struct NewProfileOrAccount_Previews: PreviewProvider {
     static var previews: some View {
-        NewProfileOrAccount(name: .constant("Taylor Swift"), email: .constant("taylo@swift.com"), photo: .constant(UIImage()), title: .constant(.currentAccount), number: .constant("1234 5678 9012 3456"), balance: .constant(2500), category: .constant(.salary), date: .constant(Date.now))
+        NewProfileOrAccount(name: .constant("Taylor Swift"), email: .constant("taylo@swift.com"), photo: .constant(UIImage()), title: .constant(.currentAccount), number: .constant("1234"), balance: .constant(2500), category: .constant(.salary), date: .constant(Date.now))
             .preferredColorScheme(.dark)
     }
 }

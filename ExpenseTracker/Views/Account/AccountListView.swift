@@ -12,7 +12,6 @@ struct AccountListView: View {
     @AppStorage("session") private var session: String?
     @Environment(\.managedObjectContext) var moc
     @FetchRequest(sortDescriptors: [SortDescriptor(\.number)]) var accounts: FetchedResults<Account>
-    
     @StateObject private var accountListViewModel = AccountListViewModel()
     @FocusState var isFocused: NewProfileOrAccount.FocusedField?
         

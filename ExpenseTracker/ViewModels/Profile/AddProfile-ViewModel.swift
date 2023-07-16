@@ -25,9 +25,11 @@ extension AddProfile {
         @Published var messageAlert = ""
         @Published var titleAlert = ""
         
-        let color1 = ColorEnum.allCases.randomElement() ?? .green
-        let color2 = ColorEnum.allCases.randomElement() ?? .orange
-        let color3 = ColorEnum.allCases.randomElement() ?? .pink
+        @ObservedObject var newProfileOrAccountViewModel = NewProfileOrAccount.NewProfileOrAccountViewModel()
+        
+//        let color1 = ColorEnum.allCases.randomElement() ?? .green
+//        let color2 = ColorEnum.allCases.randomElement() ?? .orange
+//        let color3 = ColorEnum.allCases.randomElement() ?? .pink
         
         var isDisabled: Bool {
             name.isEmpty || email.isEmpty || number.isEmpty
@@ -41,6 +43,7 @@ extension AddProfile {
             UserDefaults.standard.set(account, forKey: "session")
         }
         
+        /*
         func saveData(moc: NSManagedObjectContext) {
             let profile = Profile(context: moc)
             profile.id = UUID()
@@ -68,10 +71,26 @@ extension AddProfile {
             do {
                 try moc.save()
                 saveSession(account: account.wrappedNumber)
-                /*
-                 showingAlert = true
-                 titleAlert = "Confirmation"
-                 messageAlert = AlertMessage.saveSucces.rawValue*/
+            } catch {
+                print("Failed to save data: \(error.localizedDescription)")
+                showingAlert = true
+                titleAlert = "Something went wrong!"
+                messageAlert = AlertMessage.saveFailed.rawValue
+            }
+        }*/
+        func saveData(moc: NSManagedObjectContext) {
+            let profile = Profile(context: moc)
+            profile.id = UUID()
+            profile.name = name
+            profile.photo = uiImage.jpegData(compressionQuality: 0.8)
+            profile.email = email
+            
+            newProfileOrAccountViewModel.saveData(moc: moc, profile: profile, title: title, name: name, number: number, balance: balance, date: date, category: category)
+            
+            do {
+                try moc.save()
+//                saveSession(account: account.wrappedNumber)
+                saveSession(account: number)
             } catch {
                 print("Failed to save data: \(error.localizedDescription)")
                 showingAlert = true
