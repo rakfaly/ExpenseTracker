@@ -103,24 +103,16 @@ class DataController: ObservableObject {
     
     static func unarchiveData(data: Data) -> [Color] {
         var colors = [Color]()
-        if let arrayData = NSKeyedUnarchiver.unarchiveObject(with: data) as? [UIColor] {
-            for color in arrayData {
-                let result = Color(color)
-                colors.append(result)
+        do {
+            if let arrayData = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSArray.self, UIColor.self], from: data) as? [UIColor] {
+                for color in arrayData {
+                    colors.append(Color(color))
+                }
             }
+        } catch {
+            print("Error: \(error)")
         }
-//        do {
-//            if let arrayData = try NSKeyedUnarchiver.unarchivedObject(ofClass: [UIColor].self, from: data) {
-//                for color in arrayData {
-//                    let result = Color(color)
-//                    colors.append(result)
-//                }
-//            }
-//            return colors
-//        } catch {
-//            print("Error: \(error)")
-//        }
-//
+
         return colors
     }
 }

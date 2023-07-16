@@ -94,7 +94,6 @@ struct NewProfileOrAccount: View {
     } //: body
 }
 
-
 struct NewProfileOrAccount_Previews: PreviewProvider {
     static var previews: some View {
         NewProfileOrAccount(name: .constant("Taylor Swift"), email: .constant("taylo@swift.com"), photo: .constant(UIImage()), title: .constant(.currentAccount), number: .constant("1234 5678 9012 3456"), balance: .constant(2500), category: .constant(.salary), date: .constant(Date.now))

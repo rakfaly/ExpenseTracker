@@ -66,7 +66,6 @@
 		60D0DBEB2A61B2AB00155493 /* AddTransactionView-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D0DBEA2A61B2AB00155493 /* AddTransactionView-ViewModel.swift */; };
 		60D0DBF62A632F0D00155493 /* Account+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D0DBF42A632F0D00155493 /* Account+CoreDataClass.swift */; };
 		60D0DBF72A632F0D00155493 /* Account+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D0DBF52A632F0D00155493 /* Account+CoreDataProperties.swift */; };
-		60D0DBFB2A6339B400155493 /* ColorSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D0DBFA2A6339B400155493 /* ColorSet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -129,7 +128,6 @@
 		60D0DBEA2A61B2AB00155493 /* AddTransactionView-ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddTransactionView-ViewModel.swift"; sourceTree = "<group>"; };
 		60D0DBF42A632F0D00155493 /* Account+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		60D0DBF52A632F0D00155493 /* Account+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
-		60D0DBFA2A6339B400155493 /* ColorSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -294,7 +292,6 @@
 				60B6A1CA2A53000C00F7C05A /* AccountListView.swift */,
 				601EE4832A4CBB3600489E8C /* AccountRow.swift */,
 				604CE7212A555040009E4979 /* TitleAccount.swift */,
-				60D0DBFA2A6339B400155493 /* ColorSet.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -507,7 +504,6 @@
 				601EE4822A4CA86700489E8C /* ProfileView.swift in Sources */,
 				605032802A4DD5B30065EE06 /* TransactionCategory.swift in Sources */,
 				60D0DBE02A61A12800155493 /* Home-ViewModel.swift in Sources */,
-				60D0DBFB2A6339B400155493 /* ColorSet.swift in Sources */,
 				6050327B2A4DD05A0065EE06 /* Transaction+CoreDataClass.swift in Sources */,
 				60B6A1CE2A53042E00F7C05A /* NewProfileOrAccount.swift in Sources */,
 				601EE47C2A4C62F400489E8C /* DataController.swift in Sources */,
