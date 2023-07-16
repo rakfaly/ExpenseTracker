@@ -17,12 +17,8 @@ struct AccountRow: View {
     var accountNumber: String
     var name: String
     
-    let color1: ColorEnum = ColorEnum.allCases.randomElement() ?? .green
-    let color2: ColorEnum = ColorEnum.allCases.randomElement() ?? .orange
-    let color3: ColorEnum = ColorEnum.allCases.randomElement() ?? .pink
-    
     @Binding var selectedAccount: String
-    
+        
     //MARK: - body
     var body: some View {
         VStack(alignment: .leading) {
@@ -50,11 +46,6 @@ struct AccountRow: View {
                 .opacity(0.7)
             
         } //: VStack
-        .frame(maxWidth: .infinity)
-        .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
-        .background(LinearGradient(gradient: Gradient(colors: [color1.color, color2.color, color3.color]), startPoint: .bottomLeading, endPoint: .topTrailing))
-        .foregroundColor(.white)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
         .onTapGesture {
             if accountNumber != session {
                 showingAlert = true

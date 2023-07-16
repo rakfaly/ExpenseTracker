@@ -1,5 +1,5 @@
 //
-//  ColorEnum.swift
+//  UIColorEnum.swift
 //  ExpenseTracker
 //
 //  Created by Faly RAKOTOMAHARO on 04/07/2023.
@@ -21,45 +21,45 @@ enum ColorEnum: CaseIterable {
     case gray
     case black
     case cyan
-    case mint
-    case primary
+    case lightGray
+    case tertiaryLabel
     case brown
     case secondary
     
-    var color: Color {
+    var color: UIColor {
         switch self {
         case .red:
-            return Color.red
+            return UIColor.red
         case .orange:
-            return Color.orange
+            return UIColor.orange
         case .yellow:
-            return Color.yellow
+            return UIColor.yellow
         case .green:
-            return Color.green
+            return UIColor.green
         case .blue:
-            return Color.blue
+            return UIColor.blue
         case .purple:
-            return Color.purple
+            return UIColor.purple
         case .pink:
-            return Color.pink
+            return UIColor.systemPink
         case .teal:
-            return Color.teal
+            return UIColor.systemTeal
         case .indigo:
-            return Color.indigo
+            return UIColor.systemIndigo
         case .gray:
-            return Color.gray
+            return UIColor.gray
         case .black:
-            return Color.black
+            return UIColor.black
         case .cyan:
-            return Color.cyan
-        case .mint:
-            return Color.mint
-        case .primary:
-            return Color.primary
+            return UIColor.cyan
+        case .lightGray:
+            return UIColor.lightGray
+        case .tertiaryLabel:
+            return UIColor.tertiaryLabel
         case .brown:
-            return Color.brown
+            return UIColor.brown
         case .secondary:
-            return Color.secondary
+            return UIColor.secondaryLabel
         }
     }
 }

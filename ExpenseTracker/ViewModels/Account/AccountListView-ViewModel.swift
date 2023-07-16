@@ -29,6 +29,10 @@ extension AccountListView {
         @Published var titleAlert = ""
         
         @Published var selectedAccount = ""
+                
+        let color1 = ColorEnum.allCases.randomElement() ?? .green
+        let color2 = ColorEnum.allCases.randomElement() ?? .orange
+        let color3 = ColorEnum.allCases.randomElement() ?? .pink
         
         func saveData(accounts: FetchedResults<Account>, moc: NSManagedObjectContext) {
             guard let profile = accounts.last?.profileParent else {
@@ -41,6 +45,7 @@ extension AccountListView {
             account.title = title.rawValue
             account.number = number
             account.balance = balance
+            DataController.archiveColor(selectedAccount: account, colors: [color1.color, color2.color, color3.color])
             let transaction = Transaction(context: moc)
             transaction.id = UUID()
             transaction.accountParent = account
@@ -48,11 +53,13 @@ extension AccountListView {
             transaction.wrappedNature = .income
             transaction.date = date
             let categoryParent = Category(context: moc)
+            categoryParent.id = UUID()
             transaction.categoryParent = categoryParent
             transaction.categoryParent?.category = category.rawValue
             
             do {
                 try moc.save()
+                
                 /*
                  showingAlert = true
                  titleAlert = "Confirmation"
@@ -69,7 +76,7 @@ extension AccountListView {
             for index in offsets {
                 let account = accounts[index]
                 moc.delete(account)
-                if account.wrappedNumber == session {
+                if accounts.count <= 1 && account.wrappedNumber == session {
                     UserDefaults.standard.removeObject(forKey: "session")
                 }
             }

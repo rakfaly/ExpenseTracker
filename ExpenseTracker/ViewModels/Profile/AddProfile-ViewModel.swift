@@ -17,6 +17,7 @@ extension AddProfile {
         @Published var title: TitleAccount = .currentAccount
         @Published var number = ""
         @Published var balance = 0.0
+        @Published var color = Data()
         @Published var category: TransactionCategory = .salary
         @Published var date = Date.now
             
@@ -24,6 +25,9 @@ extension AddProfile {
         @Published var messageAlert = ""
         @Published var titleAlert = ""
         
+        let color1 = ColorEnum.allCases.randomElement() ?? .green
+        let color2 = ColorEnum.allCases.randomElement() ?? .orange
+        let color3 = ColorEnum.allCases.randomElement() ?? .pink
         
         var isDisabled: Bool {
             name.isEmpty || email.isEmpty || number.isEmpty
@@ -49,6 +53,7 @@ extension AddProfile {
             account.title = title.rawValue
             account.number = number
             account.balance = balance
+            DataController.archiveColor(selectedAccount: account, colors: [color1.color, color2.color, color3.color])
             let transaction = Transaction(context: moc)
             transaction.id = UUID()
             transaction.accountParent = account

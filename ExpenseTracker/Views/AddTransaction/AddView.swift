@@ -12,18 +12,12 @@ struct AddView: View {
     @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss
     
-    @Binding var title: String
-//    var transaction: Transaction
+    var nature: String
     var transaction: FetchedResults<Transaction>.Element?
-    @Binding var date: Date
-    @Binding var transactionCategory: TransactionCategory
-    @Binding var amount: Double
-    
-    @FocusState private var isFocused: Bool    
     var selectedAccount: FetchedResults<Account>.Element?
-    
+    @FocusState private var isFocused: Bool
     @StateObject private var addViewModel = AddViewModel()
-
+    
     
     //MARK: - body
     var body: some View {
@@ -33,14 +27,14 @@ struct AddView: View {
             
             VStack(alignment: .leading, spacing: 20) {
                 if isFocused == false {
-                    DatePicker("Select Date", selection: $date, displayedComponents: [.date])
+                    DatePicker("Select Date", selection: $addViewModel.date, displayedComponents: [.date])
                         .datePickerStyle(.graphical)
                 }
                 
                 VStack(alignment: .leading) {
-                    Text("\(title) Title")
+                    Text("\(nature) Title")
                         .font(.subheadline)
-                    Picker("Salary", selection: $transactionCategory) {
+                    Picker("Salary", selection: $addViewModel.transactionCategory) {
                         ForEach(TransactionCategory.allCases) {
                             Text($0.rawValue)
                         }
@@ -53,19 +47,19 @@ struct AddView: View {
                     HStack {
                         Text("Amount")
                         Spacer()
-                        TextField("Amount", value: $amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                        TextField("Amount", value: $addViewModel.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
                             .focused($isFocused)
                             .font(.title.bold())
-                            .foregroundColor(title == "Income" ? .green : Color.expenseColor)
+                            .foregroundColor(nature == Transaction.NatureOfTransaction.income.rawValue ? .green : Color.expenseColor)
                     }
-                    Slider(value: $amount, in: 0...10000, step: 5)
+                    Slider(value: $addViewModel.amount, in: 0...10000, step: 5)
                     
                 } //: VStack
                 
                 Button {
-                    save()
+                    addViewModel.save(transaction: transaction, selectedAccount: selectedAccount, moc: moc, nature: nature)
                     addViewModel.showingAlert.toggle()
                 } label: {
                     Text("Save")
@@ -81,9 +75,8 @@ struct AddView: View {
                     Capsule()
                         .stroke(Color.white, lineWidth: 1)
                 )
-                
             } //: VStack
-            .navigationTitle("Add \(title)")
+            .navigationTitle("Add \(nature)")
             .navigationBarTitleDisplayMode(.inline)
             .padding(30)
             .alert(DataController.alertTitle, isPresented: $addViewModel.showingAlert) {
@@ -110,42 +103,17 @@ struct AddView: View {
                 }
             }
             .task {
-                await fetchData()
+                await addViewModel.fetchData(transaction: transaction)
             }
         } //: ZStack
     } //: body
-}
-
-extension AddView {
-    func save() {
-        if let transaction = transaction {
-            DataController.editTransaction(transaction: transaction, date: date, category: transactionCategory.rawValue, amount: amount, oldAmount: addViewModel.oldAmount, context: moc)
-        } else {
-            if let selectedAccount = selectedAccount {
-                DataController.addTransaction(account: selectedAccount, nature: title, date: date, category: transactionCategory.rawValue, amount: amount, context: moc)
-            }
-        }
-    }
-    
-    func fetchData() async {
-        if let transaction = transaction {
-            title = transaction.wrappedNature.rawValue
-            date = transaction.wrappedDate
-            if let category = transaction.categoryParent?.wrappedCategory {
-                transactionCategory = TransactionCategory(rawValue: category) ?? .salary
-            }
-            amount = transaction.amount
-            
-            addViewModel.oldAmount = amount
-        }
-    }
 }
 
 
 struct AddIncome_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            AddView(title: .constant("Expense"), transaction: Transaction(), date: .constant(Date.now), transactionCategory: .constant(.salary), amount: .constant(0.0))
+            AddView(nature: "Income", transaction: nil)
                 .preferredColorScheme(.dark)
         }
     }

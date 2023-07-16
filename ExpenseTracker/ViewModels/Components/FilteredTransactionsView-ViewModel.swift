@@ -18,7 +18,7 @@ extension FilteredTransactionsView {
         @Published var transactionCategory = TransactionCategory.salary
         @Published var amount = 0.0
         
-        func deleteTransaction(at offsets: IndexSet, moc: NSManagedObjectContext, transactions: [Transaction]) {
+        func deleteTransaction(at offsets: IndexSet, transactions: [Transaction], moc: NSManagedObjectContext) {
             for index in offsets {
                 let transaction = transactions[index]
                 moc.delete(transaction)

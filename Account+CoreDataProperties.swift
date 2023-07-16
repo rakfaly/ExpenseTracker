@@ -2,12 +2,13 @@
 //  Account+CoreDataProperties.swift
 //  ExpenseTracker
 //
-//  Created by Faly RAKOTOMAHARO on 28/06/2023.
+//  Created by Faly RAKOTOMAHARO on 15/07/2023.
 //
 //
 
 import Foundation
 import CoreData
+import SwiftUI
 
 
 extension Account {
@@ -16,13 +17,14 @@ extension Account {
         return NSFetchRequest<Account>(entityName: "Account")
     }
 
-    @NSManaged public var id: UUID?
-    @NSManaged public var title: String?
     @NSManaged public var balance: Double
+    @NSManaged public var id: UUID?
     @NSManaged public var number: String?
+    @NSManaged public var title: String?
+    @NSManaged public var color: Data?
     @NSManaged public var profileParent: Profile?
     @NSManaged public var transactions: NSSet?
-        
+    
     public var wrappedId: UUID {
         id ?? UUID()
     }
@@ -30,6 +32,11 @@ extension Account {
     public var wrappedTitle: String {
         title ?? "Unknown account"
     }
+    
+    public var wrappedColor: Data {
+        color ?? Data()
+    }
+    
     public var wrappedNumber: String {
         number ?? "Unknown number"
     }

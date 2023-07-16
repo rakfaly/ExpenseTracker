@@ -15,7 +15,7 @@ struct AccountListView: View {
     
     @StateObject private var accountListViewModel = AccountListViewModel()
     @FocusState var isFocused: NewProfileOrAccount.FocusedField?
-    
+        
     var body: some View {
         List {
             ForEach(accounts, id: \.self) { (account: Account) in
@@ -23,6 +23,11 @@ struct AccountListView: View {
                     .listRowSeparator(.hidden)
                     .listRowBackground(accountListViewModel.selectedAccount != account.wrappedNumber ? Color.backgroundMain : Color.backgroundSecondary.opacity(0.1))
                     .listStyle(.inset)
+                    .frame(maxWidth: .infinity)
+                    .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
+                    .background(LinearGradient(gradient: Gradient(colors: DataController.unarchiveData(data: account.wrappedColor)), startPoint: .bottomLeading, endPoint: .topTrailing))
+                    .foregroundColor(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
             }
             .onDelete { offset in
                 accountListViewModel.deleteAccount(at: offset, accounts: accounts, moc: moc)

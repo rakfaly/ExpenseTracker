@@ -18,6 +18,8 @@ extension HomeView {
         @Published var showingPopover = false
         @Published var seeAllItems = 5
         @Published var transactionArray = [Transaction]()
+        @Published var transactionsRequest: NSFetchRequest<Transaction> = Transaction.fetchRequest()
+        
         
         func calculateSum(of nature: Transaction.NatureOfTransaction) -> Double {
             var array = [Double]()
@@ -31,36 +33,36 @@ extension HomeView {
             return array.reduce(0, +)
         }
         
-        func fetchData(moc: NSManagedObjectContext, accountRequest: NSFetchRequest<Account>, transactions: FetchedResults<Transaction>) async {
+        func fetchData(moc: NSManagedObjectContext) async {
+            let accountRequest: NSFetchRequest<Account> = Account.fetchRequest()
             if let session = session {
                 accountRequest.predicate = NSPredicate(format: "number == %@", session)
                 selectedAccount = try? moc.fetch(accountRequest).first
                  
                 let request: NSFetchRequest<Transaction> = Transaction.fetchRequest()
-                transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@", session)
+                transactionsRequest.predicate = NSPredicate(format: "accountParent.number == %@", session)
                 
                 request.sortDescriptors = [NSSortDescriptor(keyPath: \Transaction.date, ascending: false)]
                 if let sortedRequest = request.sortDescriptors {
-                    transactions.nsSortDescriptors = sortedRequest
+                    transactionsRequest.sortDescriptors = sortedRequest
                 }
                 
-                let temp = transactions.map { $0 }
-                if temp.count >= 5 {
-                    transactionArray = Array(temp.prefix(upTo: 5))
+                let transactions = DataController.fetchTransactionsToArray(request: transactionsRequest, context: moc)
+                if transactions.count >= 5 {
+                    transactionArray = Array(transactions.prefix(upTo: 5))
                 } else {
-                    transactionArray = temp
+                    transactionArray = transactions
                 }
                
                 sumOfIncome = calculateSum(of: .income)
                 sumOfExpenses = calculateSum(of: .expenses)
-                
             }
         }
         
-        func filterSearch(text: String, transactions: FetchedResults<Transaction>) {
+        func filterSearch(text: String, moc: NSManagedObjectContext) {
             if let session = session {
-                transactions.nsPredicate = text.isEmpty ? NSPredicate(format: "accountParent.number == %@", session) : NSPredicate(format: "accountParent.number == %@ AND categoryParent.category CONTAINS[c] %@", session, text)
-                transactionArray = transactions.map { $0 }
+                transactionsRequest.predicate = text.isEmpty ? NSPredicate(format: "accountParent.number == %@", session) : NSPredicate(format: "accountParent.number == %@ AND categoryParent.category CONTAINS[c] %@", session, text)
+                transactionArray = DataController.fetchTransactionsToArray(request: transactionsRequest, context: moc)
             }
         }
 

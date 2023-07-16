@@ -21,19 +21,17 @@ extension OverviewView {
         @Published var selectedAccount: Account?
         @Published var sectionFetchedArray = [SectionFetched]()
         
-        func fetchData(moc: NSManagedObjectContext, transactions: FetchedResults<Transaction>, accounts: NSFetchRequest<Account>, isAddView: Bool) async {
+        func fetchData(moc: NSManagedObjectContext, isAddView: Bool) async {
             if let session = session {
+                let accounts: NSFetchRequest<Account> = Account.fetchRequest()
                 accounts.predicate = NSPredicate(format: "number == %@", session)
                 selectedAccount = try? moc.fetch(accounts).first
-                transactions.nsPredicate = NSPredicate(format: "accountParent.number == %@", session)
                 
                 let request: NSFetchRequest<Transaction> = Transaction.fetchRequest()
+                request.predicate = NSPredicate(format: "accountParent.number == %@", session)
                 request.sortDescriptors = [NSSortDescriptor(keyPath: \Transaction.date, ascending: isAddView ? false : true)]
-                if let sortedRequest = request.sortDescriptors {
-                    transactions.nsSortDescriptors = sortedRequest
-                }
                 
-                transactionArray = transactions.map { $0 }
+                transactionArray = DataController.fetchTransactionsToArray(request: request, context: moc)
                 
                 let groupedByDate = GroupedByDate()
                 sectionFetchedArray = groupedByDate.getTransactionsGroupedByDate(transactions: transactionArray)

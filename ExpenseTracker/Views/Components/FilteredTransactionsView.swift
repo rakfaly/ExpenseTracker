@@ -6,6 +6,7 @@
 //
 
 import CoreData
+import Foundation
 import SwiftUI
 
 struct FilteredTransactionsView: View {
@@ -22,7 +23,7 @@ struct FilteredTransactionsView: View {
             Section {
                 ForEach(transactions) { transaction in
                     NavigationLink {
-                        AddView(title: $filteredTransactionsViewModel.title, transaction: transaction, date: $filteredTransactionsViewModel.date, transactionCategory: $filteredTransactionsViewModel.transactionCategory, amount: $filteredTransactionsViewModel.amount)
+                        AddView(nature: transaction.wrappedNature.rawValue, transaction: transaction)
                     } label: {
                         HStack {
                             VStack(alignment: .leading) {
@@ -41,7 +42,7 @@ struct FilteredTransactionsView: View {
                     } //: NavigationLink
                 }
                 .onDelete { offset in
-                    filteredTransactionsViewModel.deleteTransaction(at: offset, moc: moc, transactions: transactions)
+                    filteredTransactionsViewModel.deleteTransaction(at: offset, transactions: transactions, moc: moc)
                 }
                 .listRowBackground(Color.backgroundSecondary.opacity(0.2))
             } header: {
@@ -57,14 +58,13 @@ struct FilteredTransactionsView: View {
                         .underline()
                         .onTapGesture {
                             Task {
-                                 transactions = await filteredTransactionsViewModel.fetchAll(moc: moc)
+                                transactions = await filteredTransactionsViewModel.fetchAll(moc: moc)
                             }
                         }
                 }
             }
         } //: List
         .scrollContentBackground(.hidden)
-        
     } //: body
 }
 

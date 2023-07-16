@@ -10,9 +10,6 @@ import SwiftUI
 struct OverviewView: View {
     //MARK: - Properties
     @Environment(\.managedObjectContext) private var moc
-    @FetchRequest(sortDescriptors: []) var transactions: FetchedResults<Transaction>
-    var accounts: NSFetchRequest<Account> = Account.fetchRequest()
-    let accountRequest: NSFetchRequest<Account> = Account.fetchRequest()
     
     var isAddView: Bool
     @StateObject private var overviewViewModel = OverviewViewModel()
@@ -28,7 +25,7 @@ struct OverviewView: View {
                 if isAddView {
                     HStack {
                         NavigationLink {
-                            AddView(title: .constant(Transaction.NatureOfTransaction.income.rawValue), date: $overviewViewModel.date, transactionCategory: $overviewViewModel.transactionCategory, amount: $overviewViewModel.amount, selectedAccount: overviewViewModel.selectedAccount)
+                            AddView(nature: Transaction.NatureOfTransaction.income.rawValue, selectedAccount: overviewViewModel.selectedAccount)
                         } label: {
                             HeaderAddCardView(image: "square.and.arrow.down.fill", foregroundColor: .green, title: "Add Income", backgroundColor: .backgroundSecondary)
                         }
@@ -36,7 +33,7 @@ struct OverviewView: View {
                         Spacer()
 
                         NavigationLink {
-                            AddView(title: .constant(Transaction.NatureOfTransaction.expenses.rawValue), date: $overviewViewModel.date, transactionCategory: $overviewViewModel.transactionCategory, amount: $overviewViewModel.amount, selectedAccount: overviewViewModel.selectedAccount)
+                            AddView(nature: Transaction.NatureOfTransaction.expenses.rawValue, selectedAccount: overviewViewModel.selectedAccount)
                         } label: {
                             HeaderAddCardView(image: "square.and.arrow.up.fill", foregroundColor: Color.expenseColor, title: "Add Expense", backgroundColor: .orangeBackground)
                         }
@@ -74,7 +71,7 @@ struct OverviewView: View {
                 .presentationDetents([.medium])
         }
         .task {
-            await overviewViewModel.fetchData(moc: moc, transactions: transactions, accounts: accounts, isAddView: isAddView)
+            await overviewViewModel.fetchData(moc: moc, isAddView: isAddView)
         }
     } //: body
 }

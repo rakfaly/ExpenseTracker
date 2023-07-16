@@ -10,13 +10,6 @@ import SwiftUI
 struct HomeView: View {
     //MARK: - Properties    
     @Environment(\.managedObjectContext) var moc
-    @FetchRequest(sortDescriptors: []) var accounts: FetchedResults<Account>
-    @FetchRequest(sortDescriptors: [
-        SortDescriptor(\.date, order: .reverse)
-    ]) var transactions: FetchedResults<Transaction>
-    
-    let accountRequest: NSFetchRequest<Account> = Account.fetchRequest()
-    
     @StateObject private var homeViewModel = HomeViewModel()
     
     //MARK: - body
@@ -43,7 +36,7 @@ struct HomeView: View {
                                 .presentationCompactAdaptation(.popover)
                                 .onDisappear {
                                     Task {
-                                        await homeViewModel.fetchData(moc: moc, accountRequest: accountRequest, transactions: transactions)
+                                        await homeViewModel.fetchData(moc: moc)
                                     }
                                 }
                         }
@@ -84,10 +77,10 @@ struct HomeView: View {
             .listRowSeparator(.hidden)
             .searchable(text: $homeViewModel.searchText, placement: SearchFieldPlacement.toolbar, prompt: "Search transactions")
             .onChange(of: homeViewModel.searchText) { newValue in
-                homeViewModel.filterSearch(text: newValue, transactions: transactions)
+                homeViewModel.filterSearch(text: newValue, moc: moc)
             }
             .task {
-                await homeViewModel.fetchData(moc: moc, accountRequest: accountRequest, transactions: transactions)
+                await homeViewModel.fetchData(moc: moc)
             }
         } //: VStack
         .navigationTitle("Home")
