@@ -18,15 +18,10 @@ struct AccountListView: View {
     var body: some View {
         List {
             ForEach(accounts, id: \.self) { (account: Account) in
-                AccountRow(title: account.wrappedTitle, balance:account.balance, accountNumber: account.wrappedNumber, name: account.profileParent?.wrappedName ?? "Unknown Name", selectedAccount: $accountListViewModel.selectedAccount)
+                AccountRow(selectedAccount: .constant(account), currentAccountNumber: $accountListViewModel.selectedAccountNumber)
                     .listRowSeparator(.hidden)
-                    .listRowBackground(accountListViewModel.selectedAccount != account.wrappedNumber ? Color.backgroundMain : Color.backgroundSecondary.opacity(0.1))
+                    .listRowBackground(accountListViewModel.selectedAccountNumber != account.wrappedNumber ? Color.backgroundMain : Color.backgroundSecondary.opacity(0.1))
                     .listStyle(.inset)
-                    .frame(maxWidth: .infinity)
-                    .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
-                    .background(LinearGradient(gradient: Gradient(colors: DataController.unarchiveData(data: account.wrappedColor)), startPoint: .bottomLeading, endPoint: .topTrailing))
-                    .foregroundColor(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
             }
             .onDelete { offset in
                 accountListViewModel.deleteAccount(at: offset, accounts: accounts, moc: moc)
@@ -71,7 +66,7 @@ struct AccountListView: View {
         }
         .onAppear {
             if let session = session {
-                accountListViewModel.selectedAccount = session
+                accountListViewModel.selectedAccountNumber = session
             }
         }
     }

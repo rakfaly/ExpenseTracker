@@ -45,6 +45,8 @@
 		6096F6532A544512007E6650 /* TransactionsChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6096F6522A544512007E6650 /* TransactionsChart.swift */; };
 		6096F6552A5475EE007E6650 /* OverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6096F6542A5475EE007E6650 /* OverviewView.swift */; };
 		6096F6592A548A9B007E6650 /* FilteredTransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6096F6582A548A9B007E6650 /* FilteredTransactionsView.swift */; };
+		60A79B352A6449B200A263ED /* SaveProfileOrAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A79B342A6449B200A263ED /* SaveProfileOrAccount.swift */; };
+		60A79B372A644EEA00A263ED /* AccountRow-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A79B362A644EEA00A263ED /* AccountRow-ViewModel.swift */; };
 		60B6A1CB2A53000C00F7C05A /* AccountListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6A1CA2A53000C00F7C05A /* AccountListView.swift */; };
 		60B6A1CE2A53042E00F7C05A /* NewProfileOrAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6A1CD2A53042E00F7C05A /* NewProfileOrAccount.swift */; };
 		60B6A1D12A53311200F7C05A /* FormModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6A1D02A53311200F7C05A /* FormModifier.swift */; };
@@ -107,6 +109,8 @@
 		6096F6522A544512007E6650 /* TransactionsChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsChart.swift; sourceTree = "<group>"; };
 		6096F6542A5475EE007E6650 /* OverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewView.swift; sourceTree = "<group>"; };
 		6096F6582A548A9B007E6650 /* FilteredTransactionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilteredTransactionsView.swift; sourceTree = "<group>"; };
+		60A79B342A6449B200A263ED /* SaveProfileOrAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveProfileOrAccount.swift; sourceTree = "<group>"; };
+		60A79B362A644EEA00A263ED /* AccountRow-ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AccountRow-ViewModel.swift"; sourceTree = "<group>"; };
 		60B6A1CA2A53000C00F7C05A /* AccountListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountListView.swift; sourceTree = "<group>"; };
 		60B6A1CD2A53042E00F7C05A /* NewProfileOrAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProfileOrAccount.swift; sourceTree = "<group>"; };
 		60B6A1D02A53311200F7C05A /* FormModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormModifier.swift; sourceTree = "<group>"; };
@@ -351,6 +355,7 @@
 			isa = PBXGroup;
 			children = (
 				60D0DBDC2A619E5F00155493 /* AccountListView-ViewModel.swift */,
+				60A79B362A644EEA00A263ED /* AccountRow-ViewModel.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -378,6 +383,7 @@
 				60D0DBE32A61A44400155493 /* FilteredTransactionsView-ViewModel.swift */,
 				60D0DBE52A61AE3100155493 /* NewProfileOrAccountView-ViewModel.swift */,
 				60D0DBE72A61AF3300155493 /* OverviewView-ViewModel.swift */,
+				60A79B342A6449B200A263ED /* SaveProfileOrAccount.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -474,6 +480,7 @@
 				60D0DBD32A607BCA00155493 /* ProfileView-ViewModel.swift in Sources */,
 				60BE47A02A5EF737001E1FD8 /* Profile+CoreDataClass.swift in Sources */,
 				600F98812A57239F0015A228 /* CustomTabBar.swift in Sources */,
+				60A79B372A644EEA00A263ED /* AccountRow-ViewModel.swift in Sources */,
 				600F98792A56ED5F0015A228 /* SingleItem.swift in Sources */,
 				600F98712A55E6930015A228 /* AccountListPopOverView.swift in Sources */,
 				6060AA622A4B119C00FA82EC /* ContentView.swift in Sources */,
@@ -519,6 +526,7 @@
 				6050327E2A4DD05A0065EE06 /* Category+CoreDataProperties.swift in Sources */,
 				600F98752A56E9ED0015A228 /* ManualCustomTabBar.swift in Sources */,
 				60BE47782A5C807F001E1FD8 /* GroupedByDate.swift in Sources */,
+				60A79B352A6449B200A263ED /* SaveProfileOrAccount.swift in Sources */,
 				601EE4842A4CBB3600489E8C /* AccountRow.swift in Sources */,
 				6060AA722A4B526900FA82EC /* HomeView.swift in Sources */,
 				6060AA7C2A4B68B000FA82EC /* AppTabView.swift in Sources */,

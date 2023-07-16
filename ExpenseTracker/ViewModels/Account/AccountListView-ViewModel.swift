@@ -27,17 +27,16 @@ extension AccountListView {
         @Published var showingAlert = false
         @Published var messageAlert = ""
         @Published var titleAlert = ""
+        @Published var selectedAccountNumber = ""
         
-        @Published var selectedAccount = ""
-        
-        @StateObject var newProfileOrAccountViewModel = NewProfileOrAccount.NewProfileOrAccountViewModel()
+        @Published var saveProfile = SaveProfileOrAccount()
         
         func saveData(accounts: FetchedResults<Account>, moc: NSManagedObjectContext) {
             guard let profile = accounts.last?.profileParent else {
                 print("Faile to find profile")
                 return
             }
-            newProfileOrAccountViewModel.saveData(moc: moc, profile: profile, title: title, name: name, number: number, balance: balance, date: date, category: category)
+            saveProfile.saveData(moc: moc, profile: profile, title: title, name: name, number: number, balance: balance, date: date, category: category)
             
             do {
                 try moc.save()

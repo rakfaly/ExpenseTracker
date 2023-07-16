@@ -25,11 +25,7 @@ extension AddProfile {
         @Published var messageAlert = ""
         @Published var titleAlert = ""
         
-        @ObservedObject var newProfileOrAccountViewModel = NewProfileOrAccount.NewProfileOrAccountViewModel()
-        
-//        let color1 = ColorEnum.allCases.randomElement() ?? .green
-//        let color2 = ColorEnum.allCases.randomElement() ?? .orange
-//        let color3 = ColorEnum.allCases.randomElement() ?? .pink
+        @Published var saveAccount = SaveProfileOrAccount()
         
         var isDisabled: Bool {
             name.isEmpty || email.isEmpty || number.isEmpty
@@ -43,41 +39,6 @@ extension AddProfile {
             UserDefaults.standard.set(account, forKey: "session")
         }
         
-        /*
-        func saveData(moc: NSManagedObjectContext) {
-            let profile = Profile(context: moc)
-            profile.id = UUID()
-            profile.name = name
-            profile.photo = uiImage.jpegData(compressionQuality: 0.8)
-            profile.email = email
-            let account = Account(context: moc)
-            account.id = UUID()
-            account.profileParent = profile
-            account.title = title.rawValue
-            account.number = number
-            account.balance = balance
-            DataController.archiveColor(selectedAccount: account, colors: [color1.color, color2.color, color3.color])
-            let transaction = Transaction(context: moc)
-            transaction.id = UUID()
-            transaction.accountParent = account
-            transaction.amount = balance
-            transaction.wrappedNature = .income
-            transaction.date = date
-            let categoryParent = Category(context: moc)
-            categoryParent.id = UUID()
-            transaction.categoryParent = categoryParent
-            transaction.categoryParent?.category = category.rawValue
-            
-            do {
-                try moc.save()
-                saveSession(account: account.wrappedNumber)
-            } catch {
-                print("Failed to save data: \(error.localizedDescription)")
-                showingAlert = true
-                titleAlert = "Something went wrong!"
-                messageAlert = AlertMessage.saveFailed.rawValue
-            }
-        }*/
         func saveData(moc: NSManagedObjectContext) {
             let profile = Profile(context: moc)
             profile.id = UUID()
@@ -85,7 +46,7 @@ extension AddProfile {
             profile.photo = uiImage.jpegData(compressionQuality: 0.8)
             profile.email = email
             
-            newProfileOrAccountViewModel.saveData(moc: moc, profile: profile, title: title, name: name, number: number, balance: balance, date: date, category: category)
+            saveAccount.saveData(moc: moc, profile: profile, title: title, name: name, number: number, balance: balance, date: date, category: category)
             
             do {
                 try moc.save()
